@@ -4,12 +4,9 @@ import L from 'leaflet'
 
 
 function marsToMapCoordinates(location) {
-  const latitude = Number(location.lat)
-  const longitude = Number(location.lon)
-
   return [
-    500 - (latitude - 18.4) * 1000,
-    500 + (longitude - 77.7) * 1000,
+    Number(location.lat),
+    Number(location.lon),
   ]
 }
 
