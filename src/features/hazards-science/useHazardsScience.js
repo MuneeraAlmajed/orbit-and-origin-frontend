@@ -1,5 +1,4 @@
-
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from "react";
 import {
   getHazards,
   getHazardById,
@@ -7,173 +6,167 @@ import {
   getSciencePois,
   getSciencePoiById,
   getNearbySciencePois,
-} from './hazardsScienceApi'
+  getTerrainRisks,
+} from "./hazardsScienceApi";
 
 export function useHazardsScience() {
-  const [category, setCategory] = useState('all')
-  const [severity, setSeverity] = useState('all')
-  const [importance, setImportance] = useState('all')
-  const [search, setSearch] = useState('')
+  const [category, setCategory] = useState("all");
+  const [severity, setSeverity] = useState("all");
+  const [importance, setImportance] = useState("all");
+  const [search, setSearch] = useState("");
 
-  const [hazards, setHazards] = useState([])
-  const [sciencePois, setSciencePois] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
+  const [hazards, setHazards] = useState([]);
+  const [sciencePois, setSciencePois] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  const [selected, setSelected] = useState(null)
-  const [details, setDetails] = useState(null)
-  const [detailsLoading, setDetailsLoading] = useState(false)
-  const [detailsError, setDetailsError] = useState('')
+  const [selected, setSelected] = useState(null);
+  const [details, setDetails] = useState(null);
+  const [detailsLoading, setDetailsLoading] = useState(false);
+  const [detailsError, setDetailsError] = useState("");
 
-  const [nearbyResults, setNearbyResults] = useState(null)
-  const [nearbyLoading, setNearbyLoading] = useState(false)
-  const [nearbyError, setNearbyError] = useState('')
+  const [nearbyResults, setNearbyResults] = useState(null);
+  const [nearbyLoading, setNearbyLoading] = useState(false);
+  const [nearbyError, setNearbyError] = useState("");
 
   useEffect(() => {
-    const controller = new AbortController()
+    const controller = new AbortController();
 
     async function loadLocations() {
-      setLoading(true)
-      setError('')
+      setLoading(true);
+      setError("");
 
       try {
         const [hazardResponse, scienceResponse] = await Promise.all([
-          getHazards(
-            severity === 'all' ? {} : { severity },
-            controller.signal,
-          ),
+          getTerrainRisks(controller.signal),
           getSciencePois(
-            importance === 'all' ? {} : { importance },
+            importance === "all" ? {} : { importance },
             controller.signal,
           ),
-        ])
+        ]);
 
-        if (controller.signal.aborted) return
+        if (controller.signal.aborted) return;
 
-        setHazards(hazardResponse.hazards ?? [])
-        setSciencePois(scienceResponse.science_pois ?? [])
+        setHazards(
+          (hazardResponse.hazards ?? []).filter(
+            (hazard) => severity === "all" || hazard.severity === severity,
+          ),
+        );
+        setSciencePois(scienceResponse.science_pois ?? []);
       } catch (err) {
-        if (controller.signal.aborted) return
+        if (controller.signal.aborted) return;
 
-        setHazards([])
-        setSciencePois([])
-        setError(err.message)
+        setHazards([]);
+        setSciencePois([]);
+        setError(err.message);
       } finally {
         if (!controller.signal.aborted) {
-          setLoading(false)
+          setLoading(false);
         }
       }
     }
 
-    loadLocations()
+    loadLocations();
 
-    return () => controller.abort()
-  }, [severity, importance])
+    return () => controller.abort();
+  }, [severity, importance]);
 
   useEffect(() => {
-    if (!selected) return
+    if (!selected) return;
 
-    const controller = new AbortController()
+    const controller = new AbortController();
 
     async function loadDetails() {
       try {
         const response =
-          selected.kind === 'hazard'
+          selected.kind === "hazard"
             ? await getHazardById(selected.id, controller.signal)
-            : await getSciencePoiById(selected.id, controller.signal)
+            : await getSciencePoiById(selected.id, controller.signal);
 
-        if (controller.signal.aborted) return
+        if (controller.signal.aborted) return;
 
-        setDetails(response)
+        setDetails(response);
       } catch (err) {
         if (!controller.signal.aborted) {
-          setDetailsError(err.message)
+          setDetailsError(err.message);
         }
       } finally {
         if (!controller.signal.aborted) {
-          setDetailsLoading(false)
+          setDetailsLoading(false);
         }
       }
     }
 
-    loadDetails()
+    loadDetails();
 
-    return () => controller.abort()
-  }, [selected])
+    return () => controller.abort();
+  }, [selected]);
 
   const visibleLocations = useMemo(() => {
     const locations = [
       ...hazards.map((hazard) => ({
         ...hazard,
-        kind: 'hazard',
+        kind: "hazard",
       })),
       ...sciencePois.map((poi) => ({
         ...poi,
-        kind: 'science',
+        kind: "science",
       })),
-    ]
+    ];
 
-    const term = search.trim().toLowerCase()
+    const term = search.trim().toLowerCase();
 
     return locations.filter((location) => {
-      if (category === 'hazards' && location.kind !== 'hazard') {
-        return false
+      if (category === "hazards" && location.kind !== "hazard") {
+        return false;
       }
 
-      if (category === 'science' && location.kind !== 'science') {
-        return false
+      if (category === "science" && location.kind !== "science") {
+        return false;
       }
 
       if (term) {
-        const text = [
-          location.name,
-          location.type,
-          location.description,
-        ].join(' ').toLowerCase()
+        const text = [location.name, location.type, location.description]
+          .join(" ")
+          .toLowerCase();
 
-        if (!text.includes(term)) return false
+        if (!text.includes(term)) return false;
       }
 
       if (nearbyResults) {
-        const matched = nearbyResults[location.kind]
+        const matched = nearbyResults[location.kind];
 
         if (!matched.has(location.id)) {
-          return false
+          return false;
         }
       }
 
-      return true
-    })
-  }, [
-    hazards,
-    sciencePois,
-    category,
-    search,
-    nearbyResults,
-  ])
+      return true;
+    });
+  }, [hazards, sciencePois, category, search, nearbyResults]);
 
   function selectLocation(location) {
-    setDetails(null)
-    setDetailsError('')
-    setDetailsLoading(true)
+    setDetails(null);
+    setDetailsError("");
+    setDetailsLoading(true);
 
     setSelected({
       id: location.id,
       kind: location.kind,
-    })
+    });
   }
 
   async function findNearby(lat, lon, radius) {
-    const values = [lat, lon, radius]
+    const values = [lat, lon, radius];
 
-    if (values.some((value) => String(value).trim() === '')) {
-      setNearbyError('All coordinate fields are required.')
-      return
+    if (values.some((value) => String(value).trim() === "")) {
+      setNearbyError("All coordinate fields are required.");
+      return;
     }
 
-    const latitude = Number(lat)
-    const longitude = Number(lon)
-    const distance = Number(radius)
+    const latitude = Number(lat);
+    const longitude = Number(lon);
+    const distance = Number(radius);
 
     if (
       ![latitude, longitude, distance].every(Number.isFinite) ||
@@ -183,25 +176,22 @@ export function useHazardsScience() {
       longitude > 180 ||
       distance <= 0
     ) {
-      setNearbyError('Enter valid coordinates and a positive radius.')
-      return
+      setNearbyError("Enter valid coordinates and a positive radius.");
+      return;
     }
 
-    setNearbyLoading(true)
-    setNearbyError('')
+    setNearbyLoading(true);
+    setNearbyError("");
 
     try {
       const [hazardResponse, scienceResponse] = await Promise.all([
         getNearbyHazards(latitude, longitude, distance),
         getNearbySciencePois(latitude, longitude, distance),
-      ])
+      ]);
 
       setNearbyResults({
         hazard: new Map(
-          hazardResponse.hazards.map((item) => [
-            item.id,
-            item.distance_km,
-          ]),
+          hazardResponse.hazards.map((item) => [item.id, item.distance_km]),
         ),
         science: new Map(
           scienceResponse.science_pois.map((item) => [
@@ -209,18 +199,18 @@ export function useHazardsScience() {
             item.distance_km,
           ]),
         ),
-      })
+      });
     } catch (err) {
-      setNearbyError(err.message)
-      setNearbyResults(null)
+      setNearbyError(err.message);
+      setNearbyResults(null);
     } finally {
-      setNearbyLoading(false)
+      setNearbyLoading(false);
     }
   }
 
   function clearNearby() {
-    setNearbyResults(null)
-    setNearbyError('')
+    setNearbyResults(null);
+    setNearbyError("");
   }
 
   return {
@@ -247,5 +237,5 @@ export function useHazardsScience() {
     nearbyError,
     findNearby,
     clearNearby,
-  }
+  };
 }

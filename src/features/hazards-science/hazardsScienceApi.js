@@ -57,3 +57,7 @@ export function getNearbySciencePois(lat, lon, radius, signal) {
     signal,
   )
 }
+
+export function getTerrainRisks(signal) {
+  return request('/hazards/terrain-risk', signal)
+}
