@@ -8,22 +8,22 @@
     font-family: inherit;
     text-align: left;
   }
-  
+
   .rp-panel * {
     box-sizing: border-box;
   }
-  
+
   .rp-panel button,
   .rp-panel input {
     font: inherit;
   }
-  
+
   .rp-heading {
     display: flex;
     align-items: center;
     gap: 11px;
   }
-  
+
   .rp-icon {
     width: 38px;
     height: 38px;
@@ -34,20 +34,20 @@
     color: var(--rp-accent);
     font-size: 23px;
   }
-  
+
   .rp-heading h3 {
     color: #fff;
     margin: 0 0 4px;
     font-size: 16px;
   }
-  
+
   .rp-heading small,
   .rp-results small {
     color: #dfaa82;
     font-size: 10px;
     letter-spacing: 0.07em;
   }
-  
+
   .rp-description,
   .rp-secondary,
   .rp-disclaimer {
@@ -55,11 +55,11 @@
     font-size: 12px;
     line-height: 1.6;
   }
-  
+
   .rp-description {
     margin: 16px 0;
   }
-  
+
   .rp-coordinate-group {
     background: #20232a;
     border: 1px solid #3b3d46;
@@ -67,27 +67,27 @@
     padding: 12px;
     margin-bottom: 12px;
   }
-  
+
   .rp-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 9px;
   }
-  
+
   .rp-coordinate-group .rp-row {
     flex-wrap: wrap;
   }
-  
+
   .rp-coordinate-group strong {
     font-size: 11px;
   }
-  
+
   .rp-actions {
     display: flex;
     gap: 12px;
   }
-  
+
   .rp-actions button {
     padding: 0;
     background: none;
@@ -96,25 +96,25 @@
     font-size: 10px;
     cursor: pointer;
   }
-  
+
   .rp-actions button.rp-picking {
     color: #7ee8cb;
   }
-  
+
   .rp-input-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 10px;
     margin-top: 14px;
   }
-  
+
   .rp-input-grid label,
   .rp-load label {
     color: #cbc4c4;
     font-size: 11px;
     font-weight: 600;
   }
-  
+
   .rp-input-grid input,
   .rp-load input {
     display: block;
@@ -128,13 +128,13 @@
     color: white;
     font-size: 12px;
   }
-  
+
   .rp-panel button:focus-visible,
   .rp-panel input:focus-visible {
     outline: 2px solid var(--rp-accent);
     outline-offset: 2px;
   }
-  
+
   .rp-primary {
     width: 100%;
     padding: 12px;
@@ -146,16 +146,16 @@
     font-weight: 750;
     cursor: pointer;
   }
-  
+
   .rp-primary:hover {
     background: #fac495;
   }
-  
+
   .rp-panel button:disabled {
     opacity: 0.55;
     cursor: not-allowed;
   }
-  
+
   .rp-map-instruction,
   .rp-notice {
     padding: 10px;
@@ -165,7 +165,7 @@
     background: #1b3331;
     font-size: 12px;
   }
-  
+
   .rp-error {
     padding: 10px;
     border-radius: 7px;
@@ -174,22 +174,22 @@
     font-size: 12px;
     line-height: 1.6;
   }
-  
+
   .rp-load {
     margin-top: 20px;
     padding-top: 16px;
     border-top: 1px solid #343740;
   }
-  
+
   .rp-load .rp-row {
     margin-top: 8px;
   }
-  
+
   .rp-load input {
     margin-top: 0;
     flex: 1;
   }
-  
+
   .rp-load button,
   .rp-delete {
     padding: 10px 13px;
@@ -200,26 +200,26 @@
     cursor: pointer;
     font-size: 12px;
   }
-  
+
   .rp-results {
     margin-top: 20px;
     border-top: 1px solid #424047;
     padding-top: 18px;
   }
-  
+
   .rp-result-header {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
     gap: 10px;
   }
-  
+
   .rp-result-header h4 {
     color: #fff;
     font-size: 16px;
     margin: 7px 0;
   }
-  
+
   .rp-status {
     max-width: 125px;
     overflow-wrap: anywhere;
@@ -230,19 +230,19 @@
     font-size: 10px;
     text-transform: capitalize;
   }
-  
+
   .rp-status-warning {
     background: #493527;
     color: #ffbd98;
   }
-  
+
   .rp-metrics {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 9px;
     margin-top: 14px;
   }
-  
+
   .rp-metrics > div {
     min-width: 0;
     padding: 12px;
@@ -250,42 +250,42 @@
     border: 1px solid #3f414a;
     border-radius: 8px;
   }
-  
+
   .rp-metrics small {
     display: block;
     margin-bottom: 8px;
     color: #aaa2a5;
   }
-  
+
   .rp-metrics strong {
     color: #f9f1eb;
     font-size: 14px;
     overflow-wrap: anywhere;
   }
-  
+
   .rp-capitalize {
     text-transform: capitalize;
   }
-  
+
   .rp-section {
     margin-top: 17px;
     padding-top: 16px;
     border-top: 1px solid #3d4048;
   }
-  
+
   .rp-section h5 {
     margin: 0 0 10px;
     color: var(--rp-accent);
     font-size: 10px;
     letter-spacing: 0.08em;
   }
-  
+
   .rp-section p {
     color: #e4d8d3;
     font-size: 12px;
     line-height: 1.6;
   }
-  
+
   .rp-terrain {
     display: grid;
     gap: 8px;
@@ -293,7 +293,7 @@
     color: #c8c0ba;
     text-transform: capitalize;
   }
-  
+
   .rp-hazard-list,
   .rp-warning-list {
     padding-left: 19px;
@@ -302,7 +302,7 @@
     font-size: 12px;
     line-height: 1.7;
   }
-  
+
   .rp-delete {
     display: block;
     width: 100%;
@@ -311,15 +311,14 @@
     background: #3b2629;
     border-color: #a35b58;
   }
-  
+
   .rp-disclaimer {
     margin-top: 18px;
     font-size: 10px;
   }
-  
+
   @media (max-width: 430px) {
     .rp-input-grid {
       grid-template-columns: 1fr;
     }
   }
-  
