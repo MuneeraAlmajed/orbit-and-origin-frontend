@@ -1,0 +1,415 @@
+
+.dashboard {
+  min-height: 100vh;
+  background: #10151d;
+  color: #e9edf4;
+  font-family: Arial, sans-serif;
+}
+
+.topbar {
+  height: 76px;
+  padding: 0 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #171e29;
+  border-bottom: 1px solid #293342;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-icon {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: #b94f36;
+  color: white;
+  font-size: 25px;
+  font-weight: bold;
+}
+
+.brand h1 {
+  margin: 0;
+  color: #f5f6fa;
+  font-size: 16px;
+  letter-spacing: 2px;
+  font-weight: 700;
+}
+
+.brand span {
+  color: #8793a5;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+}
+
+.mission-status {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: #b4c0d0;
+  font-size: 11px;
+  letter-spacing: 1px;
+}
+
+.status-dot,
+.live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #55c89a;
+}
+
+.main-content {
+  max-width: 1500px;
+  margin: auto;
+  padding: 35px 40px;
+}
+
+.page-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+}
+
+.eyebrow {
+  margin-bottom: 9px;
+  color: #d17a60;
+  font-size: 11px;
+  letter-spacing: 2px;
+}
+
+.page-heading h2 {
+  margin: 0;
+  color: #f5f6fa;
+  font-size: 30px;
+  font-weight: 600;
+}
+
+.subtitle {
+  margin-top: 8px;
+  color: #8996a8;
+  font-size: 13px;
+}
+
+.region-tag {
+  padding: 11px 16px;
+  border: 1px solid #384454;
+  border-radius: 8px;
+  color: #d8e0eb;
+  font-size: 11px;
+  letter-spacing: 1px;
+}
+
+.region-tag span {
+  margin-right: 8px;
+  color: #e58a65;
+  font-size: 16px;
+}
+
+.explorer-layout {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  gap: 20px;
+  align-items: stretch;
+}
+
+.sidebar {
+  padding: 22px 18px;
+  background: #171e29;
+  border: 1px solid #293342;
+  border-radius: 12px;
+}
+
+.panel-heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 22px;
+}
+
+.panel-heading h3 {
+  margin: 0;
+  color: #e9edf4;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.panel-icon {
+  color: #e58a65;
+  font-size: 18px;
+}
+
+.section-label {
+  margin-bottom: 12px;
+  color: #77869a;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+}
+
+.layer-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.layer-button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px;
+  background: #1d2633;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  color: #aab6c7;
+  text-align: left;
+  font-size: 12px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.layer-button:hover {
+  border-color: #59677a;
+}
+
+.layer-button.active {
+  background: #382a2a;
+  border-color: #bd644b;
+  color: #ffffff;
+}
+
+.layer-symbol {
+  width: 18px;
+  color: #e58a65;
+  font-size: 16px;
+}
+
+.layer-check {
+  margin-left: auto;
+  color: #e58a65;
+}
+
+.sidebar-divider {
+  height: 1px;
+  margin: 25px 0;
+  background: #303b4a;
+}
+
+.location-card {
+  padding: 15px;
+  background: #1d2633;
+  border: 1px solid #303b4a;
+  border-radius: 8px;
+}
+
+.location-name {
+  display: block;
+  margin-bottom: 16px;
+  color: #e9edf4;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.coordinate-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 11px;
+  color: #8996a8;
+  font-size: 11px;
+}
+
+.coordinate-row strong {
+  color: #e9edf4;
+  font-weight: 500;
+}
+
+.map-hint {
+  margin-top: 15px;
+  color: #77869a;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.map-section {
+  min-width: 0;
+  padding: 18px;
+  background: #171e29;
+  border: 1px solid #293342;
+  border-radius: 12px;
+}
+
+.map-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 15px;
+  color: #aab6c7;
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+
+.map-toolbar > div {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.map-layer-label {
+  color: #e58a65;
+}
+
+.map-wrapper {
+  position: relative;
+  overflow: hidden;
+  height: 540px;
+  border: 1px solid #394352;
+  border-radius: 8px;
+}
+
+.mars-map {
+  width: 100%;
+  height: 100%;
+  background:
+    radial-gradient(ellipse at 45% 45%, #a85e43 0%, #713b32 35%, #422b2a 70%, #251f25 100%);
+}
+
+.mars-map .leaflet-tile-pane {
+  display: none;
+}
+
+.layer-elevation .mars-map {
+  background: radial-gradient(ellipse, #c08a64, #76503f 65%, #352b2b);
+}
+
+.layer-rock-density .mars-map {
+  background: radial-gradient(ellipse, #76513e, #4d3530 65%, #292329);
+}
+
+.layer-slope .mars-map {
+  background: radial-gradient(ellipse, #9d5945, #643d38 65%, #30272a);
+}
+
+.leaflet-container {
+  font-family: Arial, sans-serif;
+}
+
+.leaflet-control-zoom a {
+  background: #171e29 !important;
+  color: #ffffff !important;
+  border-color: #394352 !important;
+}
+
+.map-caption {
+  position: absolute;
+  top: 18px;
+  left: 55px;
+  z-index: 500;
+  padding: 9px 13px;
+  background: rgba(20, 27, 37, 0.9);
+  border: 1px solid #59606b;
+  border-radius: 6px;
+  color: #f0d6c8;
+  font-size: 10px;
+  letter-spacing: 1px;
+  pointer-events: none;
+}
+
+.map-legend {
+  position: absolute;
+  bottom: 15px;
+  left: 15px;
+  z-index: 500;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 13px;
+  padding: 11px 13px;
+  background: rgba(20, 27, 37, 0.92);
+  border: 1px solid #59606b;
+  border-radius: 7px;
+  color: #d5dce7;
+  font-size: 10px;
+  pointer-events: none;
+}
+
+.map-legend span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+
+.legend-dot.selected {
+  background: #68c8e8;
+}
+
+.legend-dot.high {
+  background: #ed654f;
+}
+
+.legend-dot.medium {
+  background: #e6ad4c;
+}
+
+.legend-dot.low {
+  background: #76b9a0;
+}
+
+.map-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 15px;
+  color: #77869a;
+  font-size: 9px;
+  letter-spacing: 0.7px;
+}
+
+@media (max-width: 850px) {
+  .main-content {
+    padding: 25px 18px;
+  }
+
+  .explorer-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .map-wrapper {
+    height: 430px;
+  }
+}
+
+@media (max-width: 550px) {
+  .topbar {
+    padding: 0 16px;
+  }
+
+  .mission-status {
+    font-size: 9px;
+  }
+
+  .page-heading {
+    align-items: flex-start;
+    gap: 15px;
+    flex-direction: column;
+  }
+
+  .map-wrapper {
+    height: 350px;
+  }
+
+  .map-footer {
+    flex-direction: column;
+  }
+}
