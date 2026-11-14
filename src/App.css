@@ -245,6 +245,30 @@
   border-radius: 12px;
 }
 
+.map-section {
+  width: 100%;
+  min-width: 0;
+}
+
+.map-wrapper {
+  width: 100%;
+  height: 650px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.mars-map {
+  width: 100%;
+  height: 100%;
+  background: #171b20;
+}
+
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+}
+
 .map-toolbar {
   display: flex;
   align-items: center;
@@ -280,20 +304,20 @@
     radial-gradient(ellipse at 45% 45%, #a85e43 0%, #713b32 35%, #422b2a 70%, #251f25 100%);
 }
 
-.mars-map .leaflet-tile-pane {
-  display: none;
-}
 
 .layer-elevation .mars-map {
-  background: radial-gradient(ellipse, #c08a64, #76503f 65%, #352b2b);
+  background:
+    radial-gradient(ellipse at 40% 35%, #d9ad80 0%, #b87954 35%, #76503f 70%, #352b2b 100%);
 }
 
 .layer-rock-density .mars-map {
-  background: radial-gradient(ellipse, #76513e, #4d3530 65%, #292329);
+  background:
+    radial-gradient(ellipse at 60% 40%, #a17b55 0%, #76513e 35%, #4d3530 70%, #292329 100%);
 }
 
 .layer-slope .mars-map {
-  background: radial-gradient(ellipse, #9d5945, #643d38 65%, #30272a);
+  background:
+    radial-gradient(ellipse at 30% 60%, #c16c50 0%, #9d5945 35%, #643d38 70%, #30272a 100%);
 }
 
 .leaflet-container {

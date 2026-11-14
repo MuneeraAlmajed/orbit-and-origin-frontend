@@ -1,83 +1,136 @@
-import {useState} from 'react'
-import { MapContainer, CircleMarker, useMapEvents } from 'react-leaflet'
-import L from 'leaflet'
-import './App.css'
+import { useState, useEffect } from "react";
+import {
+  MapContainer,
+  TileLayer,
+  CircleMarker,
+  useMapEvents,
+} from "react-leaflet";
+import L from "leaflet";
+import {
+  getMarsMap,
+  getTerrainLayers,
+  getMarsTerrain,
+  getTerrainLayer,
+} from "./services/api";
+import "./App.css";
 
-const layers = ['Satellite', 'Elevation', 'Rock Density', 'Slope']
+const NASA_TILE_URL =
+  "https://trek.nasa.gov/tiles/Mars/EQ/NES_JEZ_MID_Visible_Mosaic_HiRISE_CTX_HRSC_GCS_MARS_07-10-2018/1.0.0/default/default028mm/{z}/{y}/{x}.png";
 
-const hazards = [
-  { name: 'Rock Field', position: [570,430], severity: 'High'},
-  { name: 'Steep Slope', position: [420,620], severity: 'Medium'},
-  { name: 'Uneven Terrain', position: [620,650], severity: 'Low'},
-  
-]
-
-function MapClickHandler({onSelect}){
+function MapClickHandler({ onSelect }) {
   useMapEvents({
-    click(event){
-      onSelect(event.latlng)
+    click(event) {
+      onSelect(event.latlng);
     },
-  })
+  });
 
-  return null
+  return null;
 }
 
-function App(){
-  const [activeLayer, setActiveLayer] = useState('Satellite')
+function App() {
+  const [terrain, setTerrain] = useState(null);
+  const [activeLayer, setActiveLayer] = useState("Elevation");
   const [selectedLocation, setSelectedLocation] = useState({
     lat: 18.4,
-    lon: 77.7
-  })
+    lon: 77.7,
+  });
+  const [markerPosition, setMarkerPosition] = useState([18.4, 77.7]);
+  const [marsMap, setMarsMap] = useState(null);
+  const [layers, setLayers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [layerDetails, setLayerDetails] = useState(null);
 
-  const [markerPosition, setMarkerPosition] = useState([500,500])
+  useEffect(() => {
+    async function loadMarsData() {
+      try {
+        const [mapData, layerData] = await Promise.all([
+          getMarsMap(),
+          getTerrainLayers(),
+        ]);
 
-  function handleMapClick(position){
-    setMarkerPosition([position.lat, position.lng])
+        setMarsMap(mapData);
+        setLayers(layerData.layers);
+      } catch (error) {
+        setError("Unable to load Mars data");
+      } finally {
+        setLoading(false);
+      }
+    }
 
-    setSelectedLocation({
-      lat: 18.4 + (500 - position.lat) * 0.001,
-      lon: 77.7 + (position.lng - 500) * 0.001,
-    })
+    loadMarsData();
+  }, []);
+
+  async function handleMapClick(position) {
+    const lat = position.lat;
+    const lon = position.lng;
+
+    setMarkerPosition([lat, lon]);
+    setSelectedLocation({ lat, lon });
+    setError("");
+
+    try {
+      const terrainData = await getMarsTerrain(lat, lon);
+      setTerrain(terrainData.terrain);
+    } catch (error) {
+      setTerrain(null);
+      setError("Unable to load terrain information");
+    }
   }
 
-  return(
-    <div className='dashboard'>
-      <header className='topbar'>
-        <div className='brand'>
-          <div className='brand-icon'>0</div>
+  async function handleLayerClick(layer) {
+    setActiveLayer(layer.name);
+    setError("");
+
+    try {
+      const data = await getTerrainLayer(layer.id);
+      setLayerDetails(data);
+    } catch (error) {
+      setLayerDetails(null);
+      setError("Unable to load layer details");
+    }
+  }
+
+  return (
+    <div className="dashboard">
+      <header className="topbar">
+        <div className="brand">
+          <div className="brand-icon">O</div>
           <div>
             <h1>ORBIT & ORIGIN</h1>
             <span>MARS EXPLORATION SYSTEM</span>
-            </div>
+          </div>
         </div>
 
-        <div className='mission-status'>
-          <span className='status-dot'></span>
+        <div className="mission-status">
+          <span className="status-dot"></span>
           MARS MISSION CONTROL
         </div>
-        
       </header>
 
-      <main className='main-content'>
-        <section className='page-heading'>
+      <main className="main-content">
+        <section className="page-heading">
           <div>
-            <p className='eyebrow'>EXPLORATION / MARS</p>
+            <p className="eyebrow">EXPLORATION / MARS</p>
             <h2>Mars Explorer</h2>
-            <p className='subtitle'>
-              Explore the Martin surface and inspect terrain onditions.
+            <p className="subtitle">
+              Explore the Martian surface and inspect terrain conditions.
             </p>
           </div>
 
-          <div className='region-tag'>
-            <span>+</span> JEZERO CRATER
+          <div className="region-tag">
+            <span>⌖</span> {marsMap?.region || "MARS"}
           </div>
         </section>
 
-        <section className='explorer-layout'>
-          <aside className='sidebar'>
-            <div className='panel-heading'>
-              <span className='panel-icon'>+</span>
-              <h3>Map Layer</h3>
+        {loading && <p>Loading Mars data...</p>}
+        {error && <p>{error}</p>}
+
+        <section className="explorer-layout">
+          <aside className="sidebar">
+            <div className="panel-heading">
+              <span className="panel-icon">◈</span>
+              <h3>Map Layers</h3>
             </div>
 
             <p className="section-label">SURFACE DATA</p>
@@ -85,20 +138,57 @@ function App(){
             <div className="layer-list">
               {layers.map((layer) => (
                 <button
-                  key={layer}
-                  className={`layer-button ${activeLayer === layer ? 'active' : ''}`}
-                  onClick={() => setActiveLayer(layer)}
+                  key={layer.id}
+                  className={`layer-button ${
+                    activeLayer === layer.name ? "active" : ""
+                  }`}
+                  onClick={() => handleLayerClick(layer)}
                 >
                   <span className="layer-symbol">
-                    {layer === 'Satellite' ? '◉' : layer === 'Elevation' ? '▥' : layer === 'Rock Density' ? '◆' : '⌁'}
+                    {layer.type === "elevation"
+                      ? "▥"
+                      : layer.type === "rock_density"
+                        ? "◆"
+                        : "⌁"}
                   </span>
-                  {layer}
+
+                  {layer.name}
+
                   <span className="layer-check">
-                    {activeLayer === layer ? '●' : '○'}
+                    {activeLayer === layer.name ? "●" : "○"}
                   </span>
                 </button>
               ))}
             </div>
+
+            {layerDetails && (
+              <div className="location-card">
+                <span className="location-name">
+                  {layerDetails.name} Details
+                </span>
+
+                <div className="coordinate-row">
+                  <span>Description</span>
+                  <strong>{layerDetails.description}</strong>
+                </div>
+
+                <div className="coordinate-row">
+                  <span>Unit</span>
+                  <strong>{layerDetails.unit}</strong>
+                </div>
+
+                <div className="coordinate-row">
+                  <span>Minimum</span>
+                  <strong>{layerDetails.min_value}</strong>
+                </div>
+
+                <div className="coordinate-row">
+                  <span>Maximum</span>
+                  <strong>{layerDetails.max_value}</strong>
+                </div>
+              </div>
+            )}
+
             <div className="sidebar-divider"></div>
 
             <div className="panel-heading">
@@ -108,69 +198,93 @@ function App(){
 
             <div className="location-card">
               <span className="location-name">Jezero Crater Region</span>
+
               <div className="coordinate-row">
                 <span>Latitude</span>
                 <strong>{selectedLocation.lat.toFixed(3)}°</strong>
               </div>
+
               <div className="coordinate-row">
                 <span>Longitude</span>
                 <strong>{selectedLocation.lon.toFixed(3)}°</strong>
               </div>
             </div>
 
+            {terrain && (
+              <div className="location-card terrain-card">
+                <span className="location-name">Terrain Information</span>
+
+                <div className="coordinate-row">
+                  <span>Average Elevation</span>
+                  <strong>{terrain.average_elevation} m</strong>
+                </div>
+
+                <div className="coordinate-row">
+                  <span>Minimum Elevation</span>
+                  <strong>{terrain.min_elevation} m</strong>
+                </div>
+
+                <div className="coordinate-row">
+                  <span>Maximum Elevation</span>
+                  <strong>{terrain.max_elevation} m</strong>
+                </div>
+
+                <div className="coordinate-row">
+                  <span>Average Slope</span>
+                  <strong>{terrain.average_slope}°</strong>
+                </div>
+
+                <div className="coordinate-row">
+                  <span>Surface Type</span>
+                  <strong>{terrain.surface_type}</strong>
+                </div>
+              </div>
+            )}
+
             <p className="map-hint">
               Click anywhere on the map to inspect a location.
             </p>
-
           </aside>
 
-           <section className="map-section">
+          <section className="map-section">
             <div className="map-toolbar">
               <div>
                 <span className="live-dot"></span>
-                <span>LIVE SURFACE VIEW</span>
+                <span>NASA MARS IMAGERY</span>
               </div>
-              <span className="map-layer-label">{activeLayer.toUpperCase()} LAYER</span>
+
+              <span className="map-layer-label">
+                {activeLayer.toUpperCase()} LAYER
+              </span>
             </div>
 
-            <div className={`map-wrapper layer-${activeLayer.toLowerCase().replace(' ', '-')}`}>
+            <div className="map-wrapper">
               <MapContainer
-                crs={L.CRS.Simple}
-                center={[500, 500]}
-                zoom={-1}
-                minZoom={-2}
-                maxZoom={2}
+                crs={L.CRS.EPSG4326}
+                center={[18.4, 77.7]}
+                zoom={5}
+                minZoom={0}
+                maxZoom={17}
                 scrollWheelZoom={true}
                 className="mars-map"
               >
-                <MapClickHandler onSelect={handleMapClick} />
+                <TileLayer
+                  url={NASA_TILE_URL}
+                  minZoom={0}
+                  maxNativeZoom={17}
+                  tileSize={256}
+                  attribution="NASA Mars Trek / HiRISE"
+                />
 
-                {hazards.map((hazard) => (
-                  <CircleMarker
-                    key={hazard.name}
-                    center={hazard.position}
-                    radius={7}
-                    pathOptions={{
-                      color: '#ffffff',
-                      weight: 2,
-                      fillColor:
-                        hazard.severity === 'High'
-                          ? '#ed654f'
-                          : hazard.severity === 'Medium'
-                            ? '#e6ad4c'
-                            : '#76b9a0',
-                      fillOpacity: 1,
-                    }}
-                  />
-                ))}
+                <MapClickHandler onSelect={handleMapClick} />
 
                 <CircleMarker
                   center={markerPosition}
-                  radius={10}
+                  radius={8}
                   pathOptions={{
-                    color: '#ffffff',
-                    weight: 3,
-                    fillColor: '#68c8e8',
+                    color: "#ffffff",
+                    weight: 2,
+                    fillColor: "#68c8e8",
                     fillOpacity: 1,
                   }}
                 />
@@ -179,23 +293,20 @@ function App(){
               <div className="map-caption">
                 <span>◎</span> JEZERO CRATER
               </div>
-              <div className="map-legend">
-                <span><i className="legend-dot selected"></i> Selected</span>
-                <span><i className="legend-dot high"></i> High risk</span>
-                <span><i className="legend-dot medium"></i> Medium risk</span>
-                <span><i className="legend-dot low"></i> Low risk</span>
-              </div>
             </div>
 
             <div className="map-footer">
-              <span>MAP SOURCE: SIMULATED MOCK DATA</span>
-              <span>COORDINATES: {selectedLocation.lat.toFixed(3)}°, {selectedLocation.lon.toFixed(3)}°</span>
+              <span>MAP SOURCE: NASA MARS TREK – HiRISE</span>
+              <span>
+                COORDINATES: {selectedLocation.lat.toFixed(3)}°,{" "}
+                {selectedLocation.lon.toFixed(3)}°
+              </span>
             </div>
           </section>
         </section>
       </main>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
