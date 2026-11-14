@@ -25,6 +25,8 @@ import RoutePlanningPanel from "./features/route-planning/RoutePlanningPanel";
 import RouteMapOverlay from "./features/route-planning/RouteMapOverlay";
 
 import "./App.css";
+import "./styles/mission-details.css";
+import "./styles/hazards-polish.css";
 
 const NASA_TILE_URL =
   "https://trek.nasa.gov/tiles/Mars/EQ/NES_JEZ_MID_Visible_Mosaic_HiRISE_CTX_HRSC_GCS_MARS_07-10-2018/1.0.0/default/default028mm/{z}/{y}/{x}.png";
@@ -376,10 +378,20 @@ function App() {
               Click anywhere on the map to inspect a location.
             </p>
 
-            <HazardsSciencePanel
+            <section className="oo-hazards-shell" aria-label="Hazards and science">
+              <div className="oo-hazards-head">
+                <div className="oo-hazards-heading">
+                  <span className="oo-hazards-kicker">02 / MISSION INTELLIGENCE</span>
+                  <h3>Hazard & Science Analysis</h3>
+                  <p>Explore surface risks and scientific destinations.</p>
+                </div>
+                <span className="oo-hazards-badge">PROTOTYPE DATA</span>
+              </div>
+              <HazardsSciencePanel
               data={hazardsScience}
               selectedLocation={selectedLocation}
             />
+            </section>
 
             <RoutePlanningPanel
               planner={routePlanner}
