@@ -1,10 +1,10 @@
-
 import { useState, useEffect } from "react";
 import {
   MapContainer,
   TileLayer,
   CircleMarker,
   useMapEvents,
+  Rectangle,
 } from "react-leaflet";
 import L from "leaflet";
 import {
@@ -31,17 +31,81 @@ function MapClickHandler({ onSelect }) {
   return null;
 }
 
+function TerrainOverlay({ activeLayer }) {
+  if (activeLayer === "Satellite") {
+    return null;
+  }
+
+  const areas = [
+    {
+      bounds: [
+        [18.3, 77.2],
+        [18.4, 77.35],
+      ],
+      value: 20,
+    },
+    {
+      bounds: [
+        [18.4, 77.35],
+        [18.5, 77.5],
+      ],
+      value: 40,
+    },
+    {
+      bounds: [
+        [18.2, 77.35],
+        [18.3, 77.5],
+      ],
+      value: 60,
+    },
+    {
+      bounds: [
+        [18.4, 77.5],
+        [18.5, 77.65],
+      ],
+      value: 80,
+    },
+  ];
+
+  function getColor(value) {
+    if (activeLayer === "Elevation") {
+      return value < 30 ? "#2ecc71" : value < 60 ? "#f1c40f" : "#e67e22";
+    }
+
+    if (activeLayer === "Slope") {
+      return value < 30 ? "#2ecc71" : value < 60 ? "#f1c40f" : "#e74c3c";
+    }
+
+    return value < 30 ? "#d6b58c" : value < 60 ? "#a87945" : "#704214";
+  }
+
+  return areas.map((area, index) => (
+    <Rectangle
+      key={index}
+      bounds={area.bounds}
+      pathOptions={{
+        color: getColor(area.value),
+        fillColor: getColor(area.value),
+        fillOpacity: 0.45,
+        weight: 1,
+      }}
+    />
+  ));
+}
+
 function App() {
   const hazardsScience = useHazardsScience();
 
   const [terrain, setTerrain] = useState(null);
   const [activeLayer, setActiveLayer] = useState("Satellite");
-  const [selectedLocation, setSelectedLocation] = useState({
-    lat: 18.4,
-    lon: 77.7,
-  });
-  const [markerPosition, setMarkerPosition] = useState([18.4, 77.7]);
-  const [marsMap, setMarsMap] = useState(null);
+const [selectedLocation, setSelectedLocation] = useState({
+  lat: 18.1359,
+  lon: 77.2614,
+});
+const [markerPosition, setMarkerPosition] = useState([
+  18.1359,
+  77.2614,
+]);  const [marsMap, setMarsMap] = useState(null);
   const [layers, setLayers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -106,6 +170,24 @@ function App() {
     { id: "satellite", name: "Satellite", type: "satellite" },
     ...layers,
   ];
+
+  const terrainLegend = {
+    Elevation: [
+      { color: "#2ecc71", label: "Low" },
+      { color: "#f1c40f", label: "Medium" },
+      { color: "#e67e22", label: "High" },
+    ],
+    Slope: [
+      { color: "#2ecc71", label: "Gentle" },
+      { color: "#f1c40f", label: "Moderate" },
+      { color: "#e74c3c", label: "Steep" },
+    ],
+    "Rock Density": [
+      { color: "#d6b58c", label: "Low" },
+      { color: "#a87945", label: "Medium" },
+      { color: "#704214", label: "High" },
+    ],
+  };
 
   return (
     <div className="dashboard">
@@ -288,9 +370,9 @@ function App() {
             >
               <MapContainer
                 crs={L.CRS.EPSG4326}
-                center={[18.4, 77.7]}
-                zoom={5}
-                minZoom={0}
+                center={[18.1359, 77.2614]}
+                zoom={10}
+                minZoom={3}
                 maxZoom={17}
                 scrollWheelZoom={true}
                 className="mars-map"
@@ -302,6 +384,24 @@ function App() {
                   tileSize={256}
                   attribution="NASA Mars Trek / HiRISE"
                 />
+
+                <TerrainOverlay activeLayer={activeLayer} />
+
+                {activeLayer !== "Satellite" && (
+                  <div className="terrain-legend">
+                    <h4>{activeLayer} — Simulated</h4>
+
+                    {terrainLegend[activeLayer]?.map((item) => (
+                      <div className="legend-item" key={item.label}>
+                        <span
+                          className="legend-color"
+                          style={{ backgroundColor: item.color }}
+                        />
+                        <span>{item.label}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
 
                 <MapClickHandler onSelect={handleMapClick} />
 
