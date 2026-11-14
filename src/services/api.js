@@ -30,3 +30,7 @@ export function getMarsTerrain(lat, lon) {
 export function getMarsImagery(lat, lon) {
   return fetchData(`/imagery?lat=${lat}&lon=${lon}`)
 }
+
+export function getTerrainGrid() {
+  return fetchData('/terrain/grid')
+}

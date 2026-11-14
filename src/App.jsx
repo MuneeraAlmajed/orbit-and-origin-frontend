@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import {
   MapContainer,
@@ -12,6 +11,7 @@ import L from "leaflet";
 import {
   getMarsMap,
   getTerrainLayers,
+  getTerrainGrid,
   getMarsTerrain,
   getTerrainLayer,
 } from "./services/api";
@@ -42,78 +42,44 @@ function MapClickHandler({ onSelect }) {
   return null;
 }
 
-function TerrainOverlay({ activeLayer }) {
-  if (activeLayer === "Satellite") {
+function TerrainOverlay({ activeLayer, terrainGrid }) {
+  if (activeLayer === "Satellite" || terrainGrid.length === 0) {
     return null;
   }
 
-  const areas = [
-    {
-      bounds: [
-        [18.3, 77.2],
-        [18.4, 77.35],
-      ],
-      value: 20,
-    },
-    {
-      bounds: [
-        [18.4, 77.35],
-        [18.5, 77.5],
-      ],
-      value: 40,
-    },
-    {
-      bounds: [
-        [18.2, 77.35],
-        [18.3, 77.5],
-      ],
-      value: 60,
-    },
-    {
-      bounds: [
-        [18.4, 77.5],
-        [18.5, 77.65],
-      ],
-      value: 80,
-    },
-  ];
-
-  function getColor(value) {
+  function getColor(cell) {
     if (activeLayer === "Elevation") {
-      return value < 30
-        ? "#2ecc71"
-        : value < 60
-          ? "#f1c40f"
-          : "#e67e22";
+      if (cell.elevation < -2400) return "#2c7bb6";
+      if (cell.elevation < -2200) return "#abd9e9";
+      if (cell.elevation < -2000) return "#ffffbf";
+      return "#fdae61";
     }
 
     if (activeLayer === "Slope") {
-      return value < 30
-        ? "#2ecc71"
-        : value < 60
-          ? "#f1c40f"
-          : "#e74c3c";
+      if (cell.slope < 5) return "#2ecc71";
+      if (cell.slope < 15) return "#f1c40f";
+      return "#e74c3c";
     }
 
-    return value < 30
-      ? "#d6b58c"
-      : value < 60
-        ? "#a87945"
-        : "#704214";
+    return "#d6b58c";
   }
 
-  return areas.map((area, index) => (
-    <Rectangle
-      key={index}
-      bounds={area.bounds}
-      pathOptions={{
-        color: getColor(area.value),
-        fillColor: getColor(area.value),
-        fillOpacity: 0.45,
-        weight: 1,
-      }}
-    />
-  ));
+  return terrainGrid.map((cell, index) => {
+    const color = getColor(cell);
+
+    return (
+      <Rectangle
+        key={index}
+        bounds={cell.bounds}
+        pathOptions={{
+          color: color,
+          fillColor: color,
+          fillOpacity: 0.45,
+          weight: 0.5,
+        }}
+      />
+    );
+  });
 }
 
 function App() {
@@ -121,6 +87,7 @@ function App() {
   const routePlanner = useRoutePlanner();
 
   const [terrain, setTerrain] = useState(null);
+  const [terrainGrid, setTerrainGrid] = useState([]);
   const [activeLayer, setActiveLayer] = useState("Satellite");
 
   const [selectedLocation, setSelectedLocation] = useState({
@@ -128,10 +95,7 @@ function App() {
     lon: 77.4,
   });
 
-  const [markerPosition, setMarkerPosition] = useState([
-    18.4,
-    77.4,
-  ]);
+  const [markerPosition, setMarkerPosition] = useState([18.4, 77.4]);
 
   const [marsMap, setMarsMap] = useState(null);
   const [layers, setLayers] = useState([]);
@@ -142,13 +106,15 @@ function App() {
   useEffect(() => {
     async function loadMarsData() {
       try {
-        const [mapData, layerData] = await Promise.all([
+        const [mapData, layerData, gridData] = await Promise.all([
           getMarsMap(),
           getTerrainLayers(),
+          getTerrainGrid(),
         ]);
 
         setMarsMap(mapData);
         setLayers(layerData.layers);
+        setTerrainGrid(gridData.data);
       } catch {
         setError("Unable to load Mars data");
       } finally {
@@ -202,23 +168,22 @@ function App() {
     ...layers,
   ];
 
-  const terrainLegend = {
-    Elevation: [
-      { color: "#2ecc71", label: "Low" },
-      { color: "#f1c40f", label: "Medium" },
-      { color: "#e67e22", label: "High" },
-    ],
-    Slope: [
-      { color: "#2ecc71", label: "Gentle" },
-      { color: "#f1c40f", label: "Moderate" },
-      { color: "#e74c3c", label: "Steep" },
-    ],
-    "Rock Density": [
-      { color: "#d6b58c", label: "Low" },
-      { color: "#a87945", label: "Medium" },
-      { color: "#704214", label: "High" },
-    ],
-  };
+const terrainLegend = {
+  Elevation: [
+    { color: "#2c7bb6", label: "Below -2400 m" },
+    { color: "#abd9e9", label: "-2400 to -2200 m" },
+    { color: "#ffffbf", label: "-2200 to -2000 m" },
+    { color: "#fdae61", label: "Above -2000 m" },
+  ],
+  Slope: [
+    { color: "#2ecc71", label: "Gentle: below 5°" },
+    { color: "#f1c40f", label: "Moderate: 5°–15°" },
+    { color: "#e74c3c", label: "Steep: above 15°" },
+  ],
+  "Rock Density": [
+    { color: "#d6b58c", label: "Not yet available" },
+  ],
+};
 
   return (
     <div className="dashboard">
@@ -328,52 +293,44 @@ function App() {
             </div>
 
             <div className="location-card">
-              <span className="location-name">
-                Jezero Crater Region
-              </span>
+              <span className="location-name">Jezero Crater Region</span>
 
               <div className="coordinate-row">
                 <span>Latitude</span>
-                <strong>
-                  {selectedLocation.lat.toFixed(3)}°
-                </strong>
+                <strong>{selectedLocation.lat.toFixed(3)}°</strong>
               </div>
 
               <div className="coordinate-row">
                 <span>Longitude</span>
-                <strong>
-                  {selectedLocation.lon.toFixed(3)}°
-                </strong>
+                <strong>{selectedLocation.lon.toFixed(3)}°</strong>
               </div>
             </div>
 
             {terrain && (
-  <div className="location-card terrain-card">
-    <span className="location-name">
-      Terrain Information
-    </span>
+              <div className="location-card terrain-card">
+                <span className="location-name">Terrain Information</span>
 
-    <div className="coordinate-row">
-      <span>MOLA Elevation</span>
-      <strong>{terrain.elevation.mola} m</strong>
-    </div>
+                <div className="coordinate-row">
+                  <span>MOLA Elevation</span>
+                  <strong>{terrain.elevation.mola} m</strong>
+                </div>
 
-    <div className="coordinate-row">
-      <span>HiRISE Elevation</span>
-      <strong>{terrain.elevation.hirise} m</strong>
-    </div>
+                <div className="coordinate-row">
+                  <span>HiRISE Elevation</span>
+                  <strong>{terrain.elevation.hirise} m</strong>
+                </div>
 
-    <div className="coordinate-row">
-      <span>MOLA Slope</span>
-      <strong>{terrain.slope.mola}°</strong>
-    </div>
+                <div className="coordinate-row">
+                  <span>MOLA Slope</span>
+                  <strong>{terrain.slope.mola}°</strong>
+                </div>
 
-    <div className="coordinate-row">
-      <span>HiRISE Slope</span>
-      <strong>{terrain.slope.hirise}°</strong>
-    </div>
-  </div>
-)}
+                <div className="coordinate-row">
+                  <span>HiRISE Slope</span>
+                  <strong>{terrain.slope.hirise}°</strong>
+                </div>
+              </div>
+            )}
 
             <p className="map-hint">
               Click anywhere on the map to inspect a location.
@@ -434,19 +391,14 @@ function App() {
                   attribution="NASA Mars Trek / HiRISE"
                 />
 
-                <TerrainOverlay activeLayer={activeLayer} />
+                <TerrainOverlay activeLayer={activeLayer} terrainGrid={terrainGrid} />
 
                 {activeLayer !== "Satellite" && (
                   <div className="terrain-legend">
-                    <h4>
-                      {activeLayer} — Simulated
-                    </h4>
+                    <h4>{activeLayer} — NASA HiRISE Data</h4>
 
                     {terrainLegend[activeLayer]?.map((item) => (
-                      <div
-                        className="legend-item"
-                        key={item.label}
-                      >
+                      <div className="legend-item" key={item.label}>
                         <span
                           className="legend-color"
                           style={{
@@ -467,9 +419,7 @@ function App() {
                   onSelect={hazardsScience.selectLocation}
                 />
 
-                <RouteMapOverlay
-                  route={routePlanner.route}
-                />
+                <RouteMapOverlay route={routePlanner.route} />
 
                 <CircleMarker
                   center={markerPosition}
@@ -519,13 +469,10 @@ function App() {
             </div>
 
             <div className="map-footer">
-              <span>
-                MAP SOURCE: NASA MARS TREK – HiRISE
-              </span>
+              <span>MAP SOURCE: NASA MARS TREK – HiRISE</span>
 
               <span>
-                COORDINATES:{" "}
-                {selectedLocation.lat.toFixed(3)}°,{" "}
+                COORDINATES: {selectedLocation.lat.toFixed(3)}°,{" "}
                 {selectedLocation.lon.toFixed(3)}°
               </span>
             </div>
