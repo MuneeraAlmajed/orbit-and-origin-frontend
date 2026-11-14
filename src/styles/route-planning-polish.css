@@ -1,0 +1,399 @@
+/* ORBIT & ORIGIN
+   Route Planning — Navigation Console
+   Dashboard-only design
+*/
+
+#mission-dashboard .rp-panel {
+  position: relative;
+  isolation: isolate;
+  margin-top: 28px;
+  padding: 24px 17px;
+  border: 1px solid rgba(244, 158, 104, .27);
+  border-radius: 18px;
+  background:
+    radial-gradient(
+      ellipse at 100% 0,
+      rgba(244, 147, 83, .11),
+      transparent 57%
+    ),
+    linear-gradient(145deg, #1a2839, #0c1522 75%);
+  box-shadow:
+    0 22px 55px rgba(0, 0, 0, .18),
+    inset 0 1px rgba(255, 255, 255, .035);
+}
+
+#mission-dashboard .rp-panel::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 22px;
+  width: 85px;
+  height: 2px;
+  background: #f49e68;
+  box-shadow: 0 0 16px rgba(244, 158, 104, .65);
+}
+
+#mission-dashboard .rp-heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 18px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid rgba(179, 201, 219, .14);
+}
+
+#mission-dashboard .rp-icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(244, 158, 104, .3);
+  border-radius: 13px;
+  background: rgba(244, 158, 104, .12);
+  color: #f9b68a;
+  font-size: 23px;
+}
+
+#mission-dashboard .rp-heading h3 {
+  margin: 0;
+  color: #fff;
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: -.025em;
+}
+
+#mission-dashboard .rp-heading small {
+  color: #f0b58d;
+  font-size: 10px;
+  letter-spacing: .12em;
+}
+
+#mission-dashboard .rp-description {
+  color: #aabacc;
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+/* COORDINATE CONTROLS */
+
+#mission-dashboard .rp-coordinate-group {
+  position: relative;
+  min-width: 0;
+  margin-bottom: 14px;
+  padding: 16px;
+  border: 1px solid rgba(156, 190, 214, .22);
+  border-radius: 13px;
+  background: linear-gradient(
+    140deg,
+    rgba(32, 47, 66, .96),
+    rgba(13, 24, 38, .97)
+  );
+  transition:
+    border-color .25s ease,
+    box-shadow .25s ease;
+}
+
+#mission-dashboard .rp-coordinate-group:hover {
+  border-color: rgba(126, 218, 239, .42);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .13);
+}
+
+#mission-dashboard .rp-coordinate-group::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 18px;
+  bottom: 18px;
+  width: 3px;
+  border-radius: 5px;
+  background: #86d7e9;
+  box-shadow: 0 0 12px rgba(134, 215, 233, .5);
+}
+
+#mission-dashboard .rp-coordinate-group:nth-of-type(even)::before {
+  background: #f49e68;
+  box-shadow: 0 0 12px rgba(244, 158, 104, .5);
+}
+
+#mission-dashboard .rp-coordinate-group strong {
+  color: #ffe0c7;
+  font-size: 11px;
+  letter-spacing: .08em;
+}
+
+#mission-dashboard .rp-input-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+}
+
+#mission-dashboard .rp-input-grid input {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  padding: 11px 10px;
+  border: 1px solid rgba(159, 189, 211, .27);
+  border-radius: 9px;
+  background: #091320;
+  color: #edf7ff;
+  font-variant-numeric: tabular-nums;
+}
+
+#mission-dashboard .rp-input-grid input:focus {
+  border-color: #86d7e9;
+  outline: 2px solid rgba(134, 215, 233, .38);
+  outline-offset: 1px;
+}
+
+#mission-dashboard .rp-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+#mission-dashboard .rp-actions button {
+  border: 1px solid rgba(134, 215, 233, .25);
+  border-radius: 8px;
+  background: rgba(134, 215, 233, .07);
+  color: #b1ebf8;
+  cursor: pointer;
+}
+
+#mission-dashboard .rp-actions button:hover:not(:disabled) {
+  background: rgba(134, 215, 233, .17);
+  border-color: rgba(134, 215, 233, .5);
+}
+
+#mission-dashboard .rp-actions button.rp-picking {
+  border-color: rgba(123, 226, 180, .55);
+  background: rgba(123, 226, 180, .14);
+  color: #b6f9da;
+}
+
+/* PRIMARY NAVIGATION ACTION */
+
+#mission-dashboard .rp-primary {
+  display: block;
+  position: relative;
+  width: 100%;
+  min-height: 50px;
+  border: 0;
+  border-radius: 11px;
+  background: linear-gradient(110deg, #ffc18b, #e98951);
+  color: #1e120e;
+  font-weight: 850;
+  letter-spacing: .045em;
+  cursor: pointer;
+  box-shadow: 0 12px 30px rgba(244, 158, 104, .17);
+  transition:
+    transform .25s ease,
+    box-shadow .25s ease;
+}
+
+#mission-dashboard .rp-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 36px rgba(244, 158, 104, .3);
+}
+
+#mission-dashboard .rp-primary:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+}
+
+/* GENERATED ROUTE ANALYSIS */
+
+#mission-dashboard .rp-results {
+  position: relative;
+  margin-top: 24px;
+  padding-top: 22px;
+  border-top: 1px solid rgba(244, 158, 104, .26);
+  animation: oo-route-reveal .5s ease both;
+}
+
+#mission-dashboard .rp-result-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+#mission-dashboard .rp-result-header h4 {
+  color: #fff;
+  font-size: 17px;
+  line-height: 1.4;
+}
+
+#mission-dashboard .rp-status {
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  padding: 8px 11px;
+  border: 1px solid rgba(134, 215, 233, .35);
+  border-radius: 50px;
+  background: rgba(134, 215, 233, .10);
+  color: #b1ebf8;
+  font-size: 10px;
+  font-weight: 750;
+  overflow-wrap: anywhere;
+}
+
+#mission-dashboard .rp-status-warning {
+  border-color: rgba(255, 132, 124, .42);
+  background: rgba(255, 132, 124, .12);
+  color: #ffc4be;
+}
+
+/* METRIC TILES */
+
+#mission-dashboard .rp-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 18px 0;
+}
+
+#mission-dashboard .rp-metrics > div {
+  position: relative;
+  min-width: 0;
+  padding: 17px 13px;
+  border: 1px solid rgba(159, 190, 216, .2);
+  border-radius: 12px;
+  background: linear-gradient(140deg, #203349, #111d2c);
+  transition:
+    transform .25s ease,
+    border-color .25s ease;
+}
+
+#mission-dashboard .rp-metrics > div::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 13px;
+  width: 36px;
+  height: 2px;
+  background: #86d7e9;
+}
+
+#mission-dashboard .rp-metrics > div:nth-child(even)::before {
+  background: #f49e68;
+}
+
+#mission-dashboard .rp-metrics > div:hover {
+  transform: translateY(-3px);
+  border-color: rgba(134, 215, 233, .43);
+}
+
+#mission-dashboard .rp-metrics small {
+  display: block;
+  margin-bottom: 10px;
+  color: #a3b6c9;
+  font-size: 10px;
+}
+
+#mission-dashboard .rp-metrics strong {
+  display: block;
+  color: #f6fbff;
+  font-size: 16px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+/* SAFETY REPORTS */
+
+#mission-dashboard .rp-section {
+  margin-top: 15px;
+  padding: 16px;
+  border: 1px solid rgba(159, 190, 216, .16);
+  border-radius: 12px;
+  background: rgba(7, 16, 27, .58);
+}
+
+#mission-dashboard .rp-section h5 {
+  margin: 0 0 12px;
+  color: #f9b68a;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .11em;
+}
+
+#mission-dashboard .rp-section p,
+#mission-dashboard .rp-section li {
+  color: #c4d2df;
+  font-size: 12px;
+  line-height: 1.75;
+  overflow-wrap: anywhere;
+}
+
+#mission-dashboard .rp-warning-list {
+  padding: 13px 13px 13px 30px;
+  border-left: 3px solid #ff887b;
+  border-radius: 8px;
+  background: rgba(255, 136, 123, .08);
+  color: #ffd1cc;
+}
+
+#mission-dashboard .rp-error {
+  border-left: 3px solid #ff887b;
+  color: #ffc1ba;
+}
+
+#mission-dashboard .rp-notice {
+  border-left: 3px solid #78dfb5;
+  color: #b8f5d7;
+}
+
+#mission-dashboard .rp-delete {
+  border: 1px solid rgba(255, 136, 123, .4);
+  border-radius: 10px;
+  background: rgba(255, 136, 123, .09);
+  color: #ffb9b0;
+  cursor: pointer;
+}
+
+#mission-dashboard .rp-delete:hover:not(:disabled) {
+  border-color: rgba(255, 136, 123, .7);
+  background: rgba(255, 136, 123, .17);
+}
+
+#mission-dashboard .rp-disclaimer {
+  color: #9caebf;
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+@keyframes oo-route-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 600px) {
+  #mission-dashboard .rp-panel {
+    padding: 19px 13px;
+    border-radius: 14px;
+  }
+
+  #mission-dashboard .rp-coordinate-group {
+    padding: 13px;
+  }
+
+  #mission-dashboard .rp-metrics > div {
+    padding: 13px 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #mission-dashboard .rp-results,
+  #mission-dashboard .rp-metrics > div {
+    animation: none !important;
+    transition: none !important;
+  }
+}

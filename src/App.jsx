@@ -27,6 +27,7 @@ import RouteMapOverlay from "./features/route-planning/RouteMapOverlay";
 import "./App.css";
 import "./styles/mission-details.css";
 import "./styles/hazards-polish.css";
+import "./styles/route-planning-polish.css";
 
 const NASA_TILE_URL =
   "https://trek.nasa.gov/tiles/Mars/EQ/NES_JEZ_MID_Visible_Mosaic_HiRISE_CTX_HRSC_GCS_MARS_07-10-2018/1.0.0/default/default028mm/{z}/{y}/{x}.png";
