@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import {
   MapContainer,
@@ -7,15 +8,22 @@ import {
   Rectangle,
 } from "react-leaflet";
 import L from "leaflet";
+
 import {
   getMarsMap,
   getTerrainLayers,
   getMarsTerrain,
   getTerrainLayer,
 } from "./services/api";
+
 import { useHazardsScience } from "./features/hazards-science/useHazardsScience";
 import HazardsSciencePanel from "./features/hazards-science/HazardsSciencePanel";
 import HazardsScienceMarkers from "./features/hazards-science/HazardsScienceMarkers";
+
+import { useRoutePlanner } from "./features/route-planning/useRoutePlanner";
+import RoutePlanningPanel from "./features/route-planning/RoutePlanningPanel";
+import RouteMapOverlay from "./features/route-planning/RouteMapOverlay";
+
 import "./App.css";
 
 const NASA_TILE_URL =
@@ -69,14 +77,26 @@ function TerrainOverlay({ activeLayer }) {
 
   function getColor(value) {
     if (activeLayer === "Elevation") {
-      return value < 30 ? "#2ecc71" : value < 60 ? "#f1c40f" : "#e67e22";
+      return value < 30
+        ? "#2ecc71"
+        : value < 60
+          ? "#f1c40f"
+          : "#e67e22";
     }
 
     if (activeLayer === "Slope") {
-      return value < 30 ? "#2ecc71" : value < 60 ? "#f1c40f" : "#e74c3c";
+      return value < 30
+        ? "#2ecc71"
+        : value < 60
+          ? "#f1c40f"
+          : "#e74c3c";
     }
 
-    return value < 30 ? "#d6b58c" : value < 60 ? "#a87945" : "#704214";
+    return value < 30
+      ? "#d6b58c"
+      : value < 60
+        ? "#a87945"
+        : "#704214";
   }
 
   return areas.map((area, index) => (
@@ -95,17 +115,22 @@ function TerrainOverlay({ activeLayer }) {
 
 function App() {
   const hazardsScience = useHazardsScience();
+  const routePlanner = useRoutePlanner();
 
   const [terrain, setTerrain] = useState(null);
   const [activeLayer, setActiveLayer] = useState("Satellite");
-const [selectedLocation, setSelectedLocation] = useState({
-  lat: 18.1359,
-  lon: 77.2614,
-});
-const [markerPosition, setMarkerPosition] = useState([
-  18.1359,
-  77.2614,
-]);  const [marsMap, setMarsMap] = useState(null);
+
+  const [selectedLocation, setSelectedLocation] = useState({
+    lat: 18.1359,
+    lon: 77.2614,
+  });
+
+  const [markerPosition, setMarkerPosition] = useState([
+    18.1359,
+    77.2614,
+  ]);
+
+  const [marsMap, setMarsMap] = useState(null);
   const [layers, setLayers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -121,7 +146,7 @@ const [markerPosition, setMarkerPosition] = useState([
 
         setMarsMap(mapData);
         setLayers(layerData.layers);
-      } catch (error) {
+      } catch {
         setError("Unable to load Mars data");
       } finally {
         setLoading(false);
@@ -137,12 +162,15 @@ const [markerPosition, setMarkerPosition] = useState([
 
     setMarkerPosition([lat, lon]);
     setSelectedLocation({ lat, lon });
+
+    routePlanner.applyMapSelection({ lat, lon });
+
     setError("");
 
     try {
       const terrainData = await getMarsTerrain(lat, lon);
       setTerrain(terrainData.terrain);
-    } catch (error) {
+    } catch {
       setTerrain(null);
       setError("Unable to load terrain information");
     }
@@ -160,7 +188,7 @@ const [markerPosition, setMarkerPosition] = useState([
     try {
       const data = await getTerrainLayer(layer.id);
       setLayerDetails(data);
-    } catch (error) {
+    } catch {
       setLayerDetails(null);
       setError("Unable to load layer details");
     }
@@ -297,22 +325,30 @@ const [markerPosition, setMarkerPosition] = useState([
             </div>
 
             <div className="location-card">
-              <span className="location-name">Jezero Crater Region</span>
+              <span className="location-name">
+                Jezero Crater Region
+              </span>
 
               <div className="coordinate-row">
                 <span>Latitude</span>
-                <strong>{selectedLocation.lat.toFixed(3)}°</strong>
+                <strong>
+                  {selectedLocation.lat.toFixed(3)}°
+                </strong>
               </div>
 
               <div className="coordinate-row">
                 <span>Longitude</span>
-                <strong>{selectedLocation.lon.toFixed(3)}°</strong>
+                <strong>
+                  {selectedLocation.lon.toFixed(3)}°
+                </strong>
               </div>
             </div>
 
             {terrain && (
               <div className="location-card terrain-card">
-                <span className="location-name">Terrain Information</span>
+                <span className="location-name">
+                  Terrain Information
+                </span>
 
                 <div className="coordinate-row">
                   <span>Average Elevation</span>
@@ -347,6 +383,11 @@ const [markerPosition, setMarkerPosition] = useState([
 
             <HazardsSciencePanel
               data={hazardsScience}
+              selectedLocation={selectedLocation}
+            />
+
+            <RoutePlanningPanel
+              planner={routePlanner}
               selectedLocation={selectedLocation}
             />
           </aside>
@@ -389,13 +430,20 @@ const [markerPosition, setMarkerPosition] = useState([
 
                 {activeLayer !== "Satellite" && (
                   <div className="terrain-legend">
-                    <h4>{activeLayer} — Simulated</h4>
+                    <h4>
+                      {activeLayer} — Simulated
+                    </h4>
 
                     {terrainLegend[activeLayer]?.map((item) => (
-                      <div className="legend-item" key={item.label}>
+                      <div
+                        className="legend-item"
+                        key={item.label}
+                      >
                         <span
                           className="legend-color"
-                          style={{ backgroundColor: item.color }}
+                          style={{
+                            backgroundColor: item.color,
+                          }}
                         />
                         <span>{item.label}</span>
                       </div>
@@ -409,6 +457,10 @@ const [markerPosition, setMarkerPosition] = useState([
                   locations={hazardsScience.visibleLocations}
                   selected={hazardsScience.selected}
                   onSelect={hazardsScience.selectLocation}
+                />
+
+                <RouteMapOverlay
+                  route={routePlanner.route}
                 />
 
                 <CircleMarker
@@ -459,10 +511,13 @@ const [markerPosition, setMarkerPosition] = useState([
             </div>
 
             <div className="map-footer">
-              <span>MAP SOURCE: NASA MARS TREK – HiRISE</span>
+              <span>
+                MAP SOURCE: NASA MARS TREK – HiRISE
+              </span>
 
               <span>
-                COORDINATES: {selectedLocation.lat.toFixed(3)}°,{" "}
+                COORDINATES:{" "}
+                {selectedLocation.lat.toFixed(3)}°,{" "}
                 {selectedLocation.lon.toFixed(3)}°
               </span>
             </div>
