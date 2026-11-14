@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import {
   MapContainer,
@@ -12,6 +13,9 @@ import {
   getMarsTerrain,
   getTerrainLayer,
 } from "./services/api";
+import { useHazardsScience } from "./features/hazards-science/useHazardsScience";
+import HazardsSciencePanel from "./features/hazards-science/HazardsSciencePanel";
+import HazardsScienceMarkers from "./features/hazards-science/HazardsScienceMarkers";
 import "./App.css";
 
 const NASA_TILE_URL =
@@ -28,8 +32,10 @@ function MapClickHandler({ onSelect }) {
 }
 
 function App() {
+  const hazardsScience = useHazardsScience();
+
   const [terrain, setTerrain] = useState(null);
-  const [activeLayer, setActiveLayer] = useState("Elevation");
+  const [activeLayer, setActiveLayer] = useState("Satellite");
   const [selectedLocation, setSelectedLocation] = useState({
     lat: 18.4,
     lon: 77.7,
@@ -82,6 +88,11 @@ function App() {
     setActiveLayer(layer.name);
     setError("");
 
+    if (layer.name === "Satellite") {
+      setLayerDetails(null);
+      return;
+    }
+
     try {
       const data = await getTerrainLayer(layer.id);
       setLayerDetails(data);
@@ -90,6 +101,11 @@ function App() {
       setError("Unable to load layer details");
     }
   }
+
+  const displayLayers = [
+    { id: "satellite", name: "Satellite", type: "satellite" },
+    ...layers,
+  ];
 
   return (
     <div className="dashboard">
@@ -119,7 +135,7 @@ function App() {
           </div>
 
           <div className="region-tag">
-            <span>⌖</span> {marsMap?.region || "MARS"}
+            <span>⌖</span> {marsMap?.region || "JEZERO CRATER"}
           </div>
         </section>
 
@@ -136,7 +152,7 @@ function App() {
             <p className="section-label">SURFACE DATA</p>
 
             <div className="layer-list">
-              {layers.map((layer) => (
+              {displayLayers.map((layer) => (
                 <button
                   key={layer.id}
                   className={`layer-button ${
@@ -145,11 +161,13 @@ function App() {
                   onClick={() => handleLayerClick(layer)}
                 >
                   <span className="layer-symbol">
-                    {layer.type === "elevation"
-                      ? "▥"
-                      : layer.type === "rock_density"
-                        ? "◆"
-                        : "⌁"}
+                    {layer.type === "satellite"
+                      ? "◉"
+                      : layer.type === "elevation"
+                        ? "▥"
+                        : layer.type === "rock_density"
+                          ? "◆"
+                          : "⌁"}
                   </span>
 
                   {layer.name}
@@ -244,6 +262,11 @@ function App() {
             <p className="map-hint">
               Click anywhere on the map to inspect a location.
             </p>
+
+            <HazardsSciencePanel
+              data={hazardsScience}
+              selectedLocation={selectedLocation}
+            />
           </aside>
 
           <section className="map-section">
@@ -258,7 +281,11 @@ function App() {
               </span>
             </div>
 
-            <div className="map-wrapper">
+            <div
+              className={`map-wrapper layer-${activeLayer
+                .toLowerCase()
+                .replace(" ", "-")}`}
+            >
               <MapContainer
                 crs={L.CRS.EPSG4326}
                 center={[18.4, 77.7]}
@@ -278,6 +305,12 @@ function App() {
 
                 <MapClickHandler onSelect={handleMapClick} />
 
+                <HazardsScienceMarkers
+                  locations={hazardsScience.visibleLocations}
+                  selected={hazardsScience.selected}
+                  onSelect={hazardsScience.selectLocation}
+                />
+
                 <CircleMarker
                   center={markerPosition}
                   radius={8}
@@ -293,10 +326,41 @@ function App() {
               <div className="map-caption">
                 <span>◎</span> JEZERO CRATER
               </div>
+
+              <div className="map-legend">
+                <span>
+                  <i className="legend-dot selected"></i>
+                  Selected
+                </span>
+
+                <span>
+                  <i className="legend-dot high"></i>
+                  High risk
+                </span>
+
+                <span>
+                  <i className="legend-dot medium"></i>
+                  Medium risk
+                </span>
+
+                <span>
+                  <i className="legend-dot low"></i>
+                  Low risk
+                </span>
+
+                <span>
+                  <i
+                    className="legend-dot"
+                    style={{ backgroundColor: "#a78bfa" }}
+                  ></i>
+                  Science POI
+                </span>
+              </div>
             </div>
 
             <div className="map-footer">
               <span>MAP SOURCE: NASA MARS TREK – HiRISE</span>
+
               <span>
                 COORDINATES: {selectedLocation.lat.toFixed(3)}°,{" "}
                 {selectedLocation.lon.toFixed(3)}°
