@@ -1,0 +1,43 @@
+/* Normal mouse for the Mars mission dashboard */
+
+@media (hover: hover) and (pointer: fine) {
+
+  body.oo-cursor-ready #root #mission-dashboard,
+  body.oo-cursor-ready #root #mission-dashboard * {
+    cursor: auto !important;
+  }
+
+  body.oo-cursor-ready #root #mission-dashboard
+  :is(button, a, select, [role="button"]) {
+    cursor: pointer !important;
+  }
+
+  body.oo-cursor-ready #root #mission-dashboard
+  :is(input, textarea) {
+    cursor: text !important;
+  }
+
+  body.oo-cursor-ready #root #mission-dashboard
+  .leaflet-container {
+    cursor: grab !important;
+  }
+
+  body.oo-cursor-ready #root #mission-dashboard
+  .leaflet-dragging {
+    cursor: grabbing !important;
+  }
+
+  body.oo-cursor-ready #root #mission-dashboard
+  .leaflet-interactive {
+    cursor: pointer !important;
+  }
+
+  body:has(#mission-dashboard:hover)
+  .oo-global-cursor,
+
+  body:has(#mission-dashboard:hover)
+  .oo-cursor {
+    display: none !important;
+  }
+
+}

@@ -1,12 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import {
-  getHazards,
   getHazardById,
   getNearbyHazards,
   getSciencePois,
   getSciencePoiById,
   getNearbySciencePois,
-  getTerrainRisks,
+  getHazards,
 } from "./hazardsScienceApi";
 
 export function useHazardsScience() {
@@ -38,7 +37,7 @@ export function useHazardsScience() {
 
       try {
         const [hazardResponse, scienceResponse] = await Promise.all([
-          getTerrainRisks(controller.signal),
+          getHazards({}, controller.signal),
           getSciencePois(
             importance === "all" ? {} : { importance },
             controller.signal,
