@@ -25,7 +25,6 @@ import RoutePlanningPanel from "./features/route-planning/RoutePlanningPanel";
 import RouteMapOverlay from "./features/route-planning/RouteMapOverlay";
 
 import "./App.css";
-import "./styles/mission-details.css";
 import "./styles/hazards-polish.css";
 import "./styles/route-planning-polish.css";
 
