@@ -1,0 +1,66 @@
+.oo-global-cursor {
+  display: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  body.oo-cursor-ready,
+  body.oo-cursor-ready #root,
+  body.oo-cursor-ready #root * {
+    cursor: none !important;
+  }
+
+  body.oo-cursor-ready input,
+  body.oo-cursor-ready textarea {
+    cursor: text !important;
+  }
+
+  body.oo-cursor-ready .oo-landing .oo-cursor {
+    display: none !important;
+  }
+
+  .oo-global-cursor {
+    position: fixed;
+    display: block;
+    top: 0;
+    left: 0;
+    width: 58px;
+    height: 58px;
+    z-index: 2147483647;
+    pointer-events: none;
+    opacity: 0;
+    transform: translate(-15%, -15%) rotate(-12deg);
+    transition:
+      opacity .16s ease,
+      scale .16s ease;
+    filter: drop-shadow(0 0 9px rgba(255, 169, 110, .45));
+  }
+
+  .oo-global-cursor img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .oo-global-cursor.is-visible {
+    opacity: 1;
+  }
+
+  .oo-global-cursor.is-typing {
+    opacity: 0;
+  }
+
+  .oo-global-cursor.is-clickable {
+    scale: 1.18;
+  }
+
+  .oo-global-cursor.is-pressed {
+    scale: .85;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .oo-global-cursor {
+    transition: none !important;
+  }
+}

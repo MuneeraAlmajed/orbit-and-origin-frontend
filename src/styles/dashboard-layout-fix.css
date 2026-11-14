@@ -1,0 +1,92 @@
+/* ORBIT & ORIGIN
+   Mission Control Layout Fix
+   Desktop: independently scrolling controls + persistent map
+*/
+
+@media (min-width: 961px) {
+
+  #mission-dashboard .explorer-layout {
+    display: grid;
+    grid-template-columns: minmax(285px, 335px) minmax(0, 1fr);
+    gap: 20px;
+    align-items: stretch;
+    height: clamp(550px, calc(100dvh - 140px), 960px);
+    min-height: 0;
+  }
+
+  #mission-dashboard .sidebar {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    max-height: none;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+    scrollbar-width: thin;
+    scrollbar-color: #647e91 #111b2a;
+  }
+
+  #mission-dashboard .sidebar::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  #mission-dashboard .sidebar::-webkit-scrollbar-track {
+    background: #111b2a;
+  }
+
+  #mission-dashboard .sidebar::-webkit-scrollbar-thumb {
+    background: #647e91;
+    border-radius: 10px;
+  }
+
+  #mission-dashboard .map-section {
+    position: relative !important;
+    top: auto !important;
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  #mission-dashboard .map-toolbar,
+  #mission-dashboard .map-footer {
+    flex: 0 0 auto;
+  }
+
+  #mission-dashboard .map-wrapper {
+    position: relative;
+    flex: 1 1 auto;
+    width: 100%;
+    height: auto;
+    min-height: 0 !important;
+    overflow: hidden;
+  }
+
+  #mission-dashboard .mars-map {
+    display: block;
+    width: 100%;
+    height: 100% !important;
+    min-height: 0 !important;
+  }
+}
+
+@media (max-width: 960px) {
+  #mission-dashboard .explorer-layout {
+    height: auto;
+  }
+
+  #mission-dashboard .sidebar {
+    height: auto;
+    overflow: visible;
+  }
+
+  #mission-dashboard .map-section {
+    position: relative !important;
+    top: auto !important;
+    height: auto;
+  }
+}

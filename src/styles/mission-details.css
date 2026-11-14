@@ -1,0 +1,1821 @@
+/* ORBIT & ORIGIN
+   Mission Control — Hazards, Science & Routes
+   Scoped to the dashboard, not the landing page.
+*/
+
+#mission-dashboard {
+  --mission-orange: #f59a62;
+  --mission-orange-soft: rgba(245, 154, 98, 0.13);
+  --mission-cyan: #87dcf0;
+  --mission-green: #83dfbd;
+  --mission-red: #ff857f;
+  --mission-border: rgba(161, 194, 216, 0.18);
+  --mission-panel: #101a28;
+}
+
+/* GENERAL INTERACTIVE PANELS */
+
+#mission-dashboard .sidebar {
+  scrollbar-width: thin;
+  scrollbar-color: #4a6375 transparent;
+}
+
+#mission-dashboard .sidebar button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+#mission-dashboard .sidebar button:focus-visible,
+#mission-dashboard .sidebar input:focus-visible,
+#mission-dashboard .sidebar select:focus-visible {
+  outline: 2px solid var(--mission-cyan);
+  outline-offset: 3px;
+}
+
+#mission-dashboard .sidebar button:not(:disabled) {
+  transition:
+    background-color .25s ease,
+    border-color .25s ease,
+    box-shadow .25s ease,
+    transform .25s ease,
+    filter .25s ease;
+}
+
+#mission-dashboard .sidebar input,
+#mission-dashboard .sidebar select {
+  min-width: 0;
+  background: rgba(5, 12, 21, .85);
+  color: #f0f7ff;
+  border: 1px solid rgba(151, 184, 207, .25);
+  border-radius: 9px;
+  transition:
+    border-color .25s ease,
+    box-shadow .25s ease;
+}
+
+#mission-dashboard .sidebar input:focus,
+#mission-dashboard .sidebar select:focus {
+  border-color: var(--mission-cyan);
+  box-shadow: 0 0 0 3px rgba(135, 220, 240, .09);
+}
+
+#mission-dashboard .sidebar input::placeholder {
+  color: #8999a8;
+}
+
+/* HAZARDS & SCIENCE */
+
+#mission-dashboard .sidebar > section:not(.rp-panel) {
+  position: relative;
+  margin-top: 24px;
+  padding: 22px 16px;
+  border: 1px solid var(--mission-border);
+  border-radius: 16px;
+  background:
+    radial-gradient(
+      circle at 100% 0%,
+      rgba(135, 220, 240, .075),
+      transparent 55%
+    ),
+    linear-gradient(
+      145deg,
+      rgba(25, 39, 57, .9),
+      rgba(11, 20, 32, .94)
+    );
+}
+
+#mission-dashboard .sidebar > section:not(.rp-panel)::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 24px;
+  width: 55px;
+  height: 2px;
+  background: var(--mission-cyan);
+  box-shadow: 0 0 18px rgba(135, 220, 240, .6);
+}
+
+#mission-dashboard .sidebar
+:is(
+  [class*="hazard-card"],
+  [class*="science-card"],
+  [class*="poi-card"],
+  [class*="location-item"]
+) {
+  position: relative;
+  border: 1px solid rgba(152, 185, 208, .16);
+  border-radius: 12px;
+  background: rgba(15, 27, 41, .85);
+  transition:
+    transform .25s ease,
+    border-color .25s ease,
+    box-shadow .25s ease;
+}
+
+#mission-dashboard .sidebar
+:is(
+  [class*="hazard-card"],
+  [class*="science-card"],
+  [class*="poi-card"],
+  [class*="location-item"]
+):hover {
+  transform: translateY(-3px);
+  border-color: rgba(135, 220, 240, .38);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, .18);
+}
+
+/* ROUTE PLANNING — MAIN PANEL */
+
+#mission-dashboard .rp-panel {
+  position: relative;
+  margin-top: 28px;
+  padding-top: 28px;
+  border-top: 1px solid rgba(245, 154, 98, .28);
+}
+
+#mission-dashboard .rp-heading {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+#mission-dashboard .rp-icon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 13px;
+  background: linear-gradient(
+    140deg,
+    rgba(245, 154, 98, .2),
+    rgba(245, 154, 98, .04)
+  );
+  border: 1px solid rgba(245, 154, 98, .32);
+  color: var(--mission-orange);
+  font-size: 24px;
+  box-shadow: 0 0 25px rgba(245, 154, 98, .09);
+}
+
+#mission-dashboard .rp-heading h3 {
+  margin: 0 0 5px;
+  color: #fff;
+  font-size: 18px;
+  letter-spacing: -.02em;
+}
+
+#mission-dashboard .rp-heading small {
+  color: #dbaa89;
+  font-size: 10px;
+  letter-spacing: .16em;
+}
+
+#mission-dashboard .rp-description {
+  margin: 15px 0 21px;
+  color: #a8b8c8;
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+/* COORDINATE INPUT PANELS */
+
+#mission-dashboard .rp-coordinate-group {
+  position: relative;
+  padding: 16px;
+  margin-bottom: 13px;
+  border: 1px solid var(--mission-border);
+  border-radius: 14px;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(27, 42, 60, .95),
+      rgba(11, 22, 36, .96)
+    );
+  overflow: hidden;
+}
+
+#mission-dashboard .rp-coordinate-group::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 45px;
+  height: 45px;
+  border-top: 1px solid rgba(245, 154, 98, .45);
+  border-right: 1px solid rgba(245, 154, 98, .45);
+  border-top-right-radius: 13px;
+  pointer-events: none;
+}
+
+#mission-dashboard .rp-coordinate-group strong {
+  color: #ffcbad;
+  font-size: 10px;
+  letter-spacing: .12em;
+}
+
+#mission-dashboard .rp-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+#mission-dashboard .rp-actions button {
+  padding: 6px 8px;
+  border: 1px solid rgba(135, 220, 240, .19);
+  border-radius: 6px;
+  background: rgba(135, 220, 240, .07);
+  color: #a9e4f1;
+  font-size: 10px;
+  cursor: pointer;
+}
+
+#mission-dashboard .rp-actions button:hover:not(:disabled) {
+  background: rgba(135, 220, 240, .15);
+}
+
+#mission-dashboard .rp-actions button.rp-picking {
+  background: rgba(131, 223, 189, .13);
+  border-color: rgba(131, 223, 189, .5);
+  color: #a4f6d7;
+}
+
+#mission-dashboard .rp-input-grid input {
+  width: 100%;
+  padding: 11px;
+  border-radius: 8px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* GENERATE BUTTON */
+
+#mission-dashboard .rp-primary {
+  position: relative;
+  width: 100%;
+  min-height: 48px;
+  border: 0;
+  border-radius: 10px;
+  background: linear-gradient(
+    110deg,
+    #f6b17a,
+    #ea8956
+  );
+  color: #1c110c;
+  font-weight: 850;
+  font-size: 12px;
+  letter-spacing: .035em;
+  cursor: pointer;
+  box-shadow: 0 10px 28px rgba(245, 154, 98, .16);
+}
+
+#mission-dashboard .rp-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 34px rgba(245, 154, 98, .27);
+}
+
+#mission-dashboard .rp-primary:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+#mission-dashboard .rp-primary:disabled {
+  cursor: wait;
+  opacity: .6;
+}
+
+/* ROUTE RESULTS */
+
+#mission-dashboard .rp-results {
+  position: relative;
+  margin-top: 24px;
+  padding-top: 22px;
+  border-top: 1px solid rgba(245, 154, 98, .25);
+  animation: mc-detail-reveal .55s ease both;
+}
+
+#mission-dashboard .rp-result-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+#mission-dashboard .rp-result-header h4 {
+  margin: 8px 0;
+  font-size: 17px;
+  line-height: 1.2;
+  color: #f7f5f2;
+}
+
+#mission-dashboard .rp-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 10px;
+  border: 1px solid rgba(131, 223, 189, .26);
+  border-radius: 30px;
+  background: rgba(131, 223, 189, .12);
+  color: #b4f3dc;
+  text-transform: capitalize;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+#mission-dashboard .rp-status-warning {
+  border-color: rgba(255, 133, 127, .35);
+  background: rgba(255, 133, 127, .12);
+  color: #ffc0b7;
+}
+
+/* SAFETY METRICS */
+
+#mission-dashboard .rp-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 18px;
+}
+
+#mission-dashboard .rp-metrics > div {
+  position: relative;
+  min-width: 0;
+  padding: 16px 12px;
+  border: 1px solid rgba(161, 194, 216, .18);
+  border-radius: 12px;
+  background: linear-gradient(
+    150deg,
+    #1d2e41,
+    #111d2c
+  );
+  overflow: hidden;
+  transition:
+    transform .25s ease,
+    border-color .25s ease;
+}
+
+#mission-dashboard .rp-metrics > div::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 14px;
+  width: 35px;
+  height: 2px;
+  background: var(--mission-cyan);
+  box-shadow: 0 0 12px rgba(135, 220, 240, .55);
+}
+
+#mission-dashboard .rp-metrics > div:nth-child(3)::before {
+  background: var(--mission-orange);
+  box-shadow: 0 0 12px rgba(245, 154, 98, .5);
+}
+
+#mission-dashboard .rp-metrics > div:hover {
+  transform: translateY(-3px);
+  border-color: rgba(135, 220, 240, .36);
+}
+
+#mission-dashboard .rp-metrics small {
+  display: block;
+  margin-bottom: 10px;
+  color: #9bafbf;
+  font-size: 9px;
+  letter-spacing: .09em;
+}
+
+#mission-dashboard .rp-metrics strong {
+  color: #f8fbfe;
+  font-size: clamp(13px, 1.5vw, 17px);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+/* ANALYSIS SECTIONS */
+
+#mission-dashboard .rp-section {
+  margin-top: 20px;
+  padding: 17px;
+  border: 1px solid rgba(161, 194, 216, .13);
+  border-radius: 12px;
+  background: rgba(7, 15, 25, .46);
+}
+
+#mission-dashboard .rp-section h5 {
+  margin: 0 0 12px;
+  color: var(--mission-orange);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .15em;
+}
+
+#mission-dashboard .rp-section p,
+#mission-dashboard .rp-terrain {
+  color: #c4d0dc;
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+#mission-dashboard .rp-terrain {
+  display: grid;
+  gap: 9px;
+}
+
+#mission-dashboard .rp-terrain span {
+  padding-bottom: 7px;
+  border-bottom: 1px solid rgba(255, 255, 255, .06);
+}
+
+#mission-dashboard .rp-hazard-list {
+  padding-left: 18px;
+  color: #e7ccd0;
+}
+
+#mission-dashboard .rp-hazard-list li {
+  margin: 9px 0;
+  line-height: 1.7;
+}
+
+#mission-dashboard .rp-warning-list {
+  margin-top: 12px;
+  padding: 12px 12px 12px 30px;
+  border-left: 2px solid var(--mission-red);
+  background: rgba(255, 133, 127, .065);
+  color: #ffc0b7;
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+#mission-dashboard .rp-map-instruction {
+  border-left: 2px solid var(--mission-cyan);
+  background: rgba(135, 220, 240, .08);
+  color: #b1efff;
+  border-radius: 7px;
+}
+
+#mission-dashboard .rp-notice {
+  border-left: 2px solid var(--mission-green);
+  background: rgba(131, 223, 189, .08);
+  color: #c3ffe2;
+}
+
+#mission-dashboard .rp-error {
+  border-left: 2px solid var(--mission-red);
+  background: rgba(255, 133, 127, .09);
+  color: #ffc9c5;
+}
+
+#mission-dashboard .rp-load {
+  margin-top: 21px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(161, 194, 216, .15);
+}
+
+#mission-dashboard .rp-delete {
+  width: 100%;
+  margin-top: 20px;
+  padding: 12px;
+  border: 1px solid rgba(255, 133, 127, .35);
+  border-radius: 9px;
+  background: rgba(255, 133, 127, .10);
+  color: #ffb5ae;
+  cursor: pointer;
+}
+
+#mission-dashboard .rp-delete:hover:not(:disabled) {
+  background: rgba(255, 133, 127, .17);
+  border-color: rgba(255, 133, 127, .6);
+}
+
+#mission-dashboard .rp-disclaimer {
+  margin-top: 23px;
+  color: #92a6b8;
+  font-size: 10px;
+  line-height: 1.7;
+}
+
+/* MAP VISUAL REFINEMENTS */
+
+#mission-dashboard .map-wrapper {
+  position: relative;
+}
+
+#mission-dashboard .map-wrapper::before {
+  content: "";
+  position: absolute;
+  z-index: 605;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      180deg,
+      transparent 47%,
+      rgba(135, 220, 240, .07) 50%,
+      transparent 53%
+    );
+  background-size: 100% 240%;
+  opacity: .5;
+  animation: mc-map-scan 12s linear infinite;
+}
+
+#mission-dashboard .map-toolbar {
+  position: relative;
+}
+
+#mission-dashboard .map-toolbar::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 28%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--mission-orange),
+    transparent
+  );
+  box-shadow: 0 0 15px rgba(245, 154, 98, .35);
+}
+
+#mission-dashboard .map-legend {
+  box-shadow: 0 15px 35px rgba(0, 0, 0, .2);
+}
+
+#mission-dashboard .leaflet-overlay-pane
+path[stroke="#ffbd73"] {
+  animation: mc-route-flow 2s linear infinite;
+}
+
+/* MOTION */
+
+@keyframes mc-detail-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes mc-map-scan {
+  from {
+    background-position: 0 -240%;
+  }
+  to {
+    background-position: 0 240%;
+  }
+}
+
+@keyframes mc-route-flow {
+  from {
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke-dashoffset: -38;
+  }
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 600px) {
+  #mission-dashboard .rp-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  #mission-dashboard .rp-coordinate-group {
+    padding: 12px;
+  }
+
+  #mission-dashboard .rp-result-header {
+    flex-wrap: wrap;
+  }
+
+  #mission-dashboard .rp-actions {
+    margin-top: 8px;
+  }
+
+  #mission-dashboard .rp-section {
+    padding: 13px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #mission-dashboard .rp-results,
+  #mission-dashboard .map-wrapper::before,
+  #mission-dashboard .leaflet-overlay-pane
+  path[stroke="#ffbd73"] {
+    animation: none !important;
+  }
+}
+/* ORBIT & ORIGIN
+   Mission Control — Hazards, Science & Routes
+   Scoped to the dashboard, not the landing page.
+*/
+
+#mission-dashboard {
+  --mission-orange: #f59a62;
+  --mission-orange-soft: rgba(245, 154, 98, 0.13);
+  --mission-cyan: #87dcf0;
+  --mission-green: #83dfbd;
+  --mission-red: #ff857f;
+  --mission-border: rgba(161, 194, 216, 0.18);
+  --mission-panel: #101a28;
+}
+
+/* GENERAL INTERACTIVE PANELS */
+
+#mission-dashboard .sidebar {
+  scrollbar-width: thin;
+  scrollbar-color: #4a6375 transparent;
+}
+
+#mission-dashboard .sidebar button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+#mission-dashboard .sidebar button:focus-visible,
+#mission-dashboard .sidebar input:focus-visible,
+#mission-dashboard .sidebar select:focus-visible {
+  outline: 2px solid var(--mission-cyan);
+  outline-offset: 3px;
+}
+
+#mission-dashboard .sidebar button:not(:disabled) {
+  transition:
+    background-color .25s ease,
+    border-color .25s ease,
+    box-shadow .25s ease,
+    transform .25s ease,
+    filter .25s ease;
+}
+
+#mission-dashboard .sidebar input,
+#mission-dashboard .sidebar select {
+  min-width: 0;
+  background: rgba(5, 12, 21, .85);
+  color: #f0f7ff;
+  border: 1px solid rgba(151, 184, 207, .25);
+  border-radius: 9px;
+  transition:
+    border-color .25s ease,
+    box-shadow .25s ease;
+}
+
+#mission-dashboard .sidebar input:focus,
+#mission-dashboard .sidebar select:focus {
+  border-color: var(--mission-cyan);
+  box-shadow: 0 0 0 3px rgba(135, 220, 240, .09);
+}
+
+#mission-dashboard .sidebar input::placeholder {
+  color: #8999a8;
+}
+
+/* HAZARDS & SCIENCE */
+
+#mission-dashboard .sidebar > section:not(.rp-panel) {
+  position: relative;
+  margin-top: 24px;
+  padding: 22px 16px;
+  border: 1px solid var(--mission-border);
+  border-radius: 16px;
+  background:
+    radial-gradient(
+      circle at 100% 0%,
+      rgba(135, 220, 240, .075),
+      transparent 55%
+    ),
+    linear-gradient(
+      145deg,
+      rgba(25, 39, 57, .9),
+      rgba(11, 20, 32, .94)
+    );
+}
+
+#mission-dashboard .sidebar > section:not(.rp-panel)::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 24px;
+  width: 55px;
+  height: 2px;
+  background: var(--mission-cyan);
+  box-shadow: 0 0 18px rgba(135, 220, 240, .6);
+}
+
+#mission-dashboard .sidebar
+:is(
+  [class*="hazard-card"],
+  [class*="science-card"],
+  [class*="poi-card"],
+  [class*="location-item"]
+) {
+  position: relative;
+  border: 1px solid rgba(152, 185, 208, .16);
+  border-radius: 12px;
+  background: rgba(15, 27, 41, .85);
+  transition:
+    transform .25s ease,
+    border-color .25s ease,
+    box-shadow .25s ease;
+}
+
+#mission-dashboard .sidebar
+:is(
+  [class*="hazard-card"],
+  [class*="science-card"],
+  [class*="poi-card"],
+  [class*="location-item"]
+):hover {
+  transform: translateY(-3px);
+  border-color: rgba(135, 220, 240, .38);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, .18);
+}
+
+/* ROUTE PLANNING — MAIN PANEL */
+
+#mission-dashboard .rp-panel {
+  position: relative;
+  margin-top: 28px;
+  padding-top: 28px;
+  border-top: 1px solid rgba(245, 154, 98, .28);
+}
+
+#mission-dashboard .rp-heading {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+#mission-dashboard .rp-icon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 13px;
+  background: linear-gradient(
+    140deg,
+    rgba(245, 154, 98, .2),
+    rgba(245, 154, 98, .04)
+  );
+  border: 1px solid rgba(245, 154, 98, .32);
+  color: var(--mission-orange);
+  font-size: 24px;
+  box-shadow: 0 0 25px rgba(245, 154, 98, .09);
+}
+
+#mission-dashboard .rp-heading h3 {
+  margin: 0 0 5px;
+  color: #fff;
+  font-size: 18px;
+  letter-spacing: -.02em;
+}
+
+#mission-dashboard .rp-heading small {
+  color: #dbaa89;
+  font-size: 10px;
+  letter-spacing: .16em;
+}
+
+#mission-dashboard .rp-description {
+  margin: 15px 0 21px;
+  color: #a8b8c8;
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+/* COORDINATE INPUT PANELS */
+
+#mission-dashboard .rp-coordinate-group {
+  position: relative;
+  padding: 16px;
+  margin-bottom: 13px;
+  border: 1px solid var(--mission-border);
+  border-radius: 14px;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(27, 42, 60, .95),
+      rgba(11, 22, 36, .96)
+    );
+  overflow: hidden;
+}
+
+#mission-dashboard .rp-coordinate-group::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 45px;
+  height: 45px;
+  border-top: 1px solid rgba(245, 154, 98, .45);
+  border-right: 1px solid rgba(245, 154, 98, .45);
+  border-top-right-radius: 13px;
+  pointer-events: none;
+}
+
+#mission-dashboard .rp-coordinate-group strong {
+  color: #ffcbad;
+  font-size: 10px;
+  letter-spacing: .12em;
+}
+
+#mission-dashboard .rp-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+#mission-dashboard .rp-actions button {
+  padding: 6px 8px;
+  border: 1px solid rgba(135, 220, 240, .19);
+  border-radius: 6px;
+  background: rgba(135, 220, 240, .07);
+  color: #a9e4f1;
+  font-size: 10px;
+  cursor: pointer;
+}
+
+#mission-dashboard .rp-actions button:hover:not(:disabled) {
+  background: rgba(135, 220, 240, .15);
+}
+
+#mission-dashboard .rp-actions button.rp-picking {
+  background: rgba(131, 223, 189, .13);
+  border-color: rgba(131, 223, 189, .5);
+  color: #a4f6d7;
+}
+
+#mission-dashboard .rp-input-grid input {
+  width: 100%;
+  padding: 11px;
+  border-radius: 8px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* GENERATE BUTTON */
+
+#mission-dashboard .rp-primary {
+  position: relative;
+  width: 100%;
+  min-height: 48px;
+  border: 0;
+  border-radius: 10px;
+  background: linear-gradient(
+    110deg,
+    #f6b17a,
+    #ea8956
+  );
+  color: #1c110c;
+  font-weight: 850;
+  font-size: 12px;
+  letter-spacing: .035em;
+  cursor: pointer;
+  box-shadow: 0 10px 28px rgba(245, 154, 98, .16);
+}
+
+#mission-dashboard .rp-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 34px rgba(245, 154, 98, .27);
+}
+
+#mission-dashboard .rp-primary:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+#mission-dashboard .rp-primary:disabled {
+  cursor: wait;
+  opacity: .6;
+}
+
+/* ROUTE RESULTS */
+
+#mission-dashboard .rp-results {
+  position: relative;
+  margin-top: 24px;
+  padding-top: 22px;
+  border-top: 1px solid rgba(245, 154, 98, .25);
+  animation: mc-detail-reveal .55s ease both;
+}
+
+#mission-dashboard .rp-result-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+#mission-dashboard .rp-result-header h4 {
+  margin: 8px 0;
+  font-size: 17px;
+  line-height: 1.2;
+  color: #f7f5f2;
+}
+
+#mission-dashboard .rp-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 10px;
+  border: 1px solid rgba(131, 223, 189, .26);
+  border-radius: 30px;
+  background: rgba(131, 223, 189, .12);
+  color: #b4f3dc;
+  text-transform: capitalize;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+#mission-dashboard .rp-status-warning {
+  border-color: rgba(255, 133, 127, .35);
+  background: rgba(255, 133, 127, .12);
+  color: #ffc0b7;
+}
+
+/* SAFETY METRICS */
+
+#mission-dashboard .rp-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 18px;
+}
+
+#mission-dashboard .rp-metrics > div {
+  position: relative;
+  min-width: 0;
+  padding: 16px 12px;
+  border: 1px solid rgba(161, 194, 216, .18);
+  border-radius: 12px;
+  background: linear-gradient(
+    150deg,
+    #1d2e41,
+    #111d2c
+  );
+  overflow: hidden;
+  transition:
+    transform .25s ease,
+    border-color .25s ease;
+}
+
+#mission-dashboard .rp-metrics > div::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 14px;
+  width: 35px;
+  height: 2px;
+  background: var(--mission-cyan);
+  box-shadow: 0 0 12px rgba(135, 220, 240, .55);
+}
+
+#mission-dashboard .rp-metrics > div:nth-child(3)::before {
+  background: var(--mission-orange);
+  box-shadow: 0 0 12px rgba(245, 154, 98, .5);
+}
+
+#mission-dashboard .rp-metrics > div:hover {
+  transform: translateY(-3px);
+  border-color: rgba(135, 220, 240, .36);
+}
+
+#mission-dashboard .rp-metrics small {
+  display: block;
+  margin-bottom: 10px;
+  color: #9bafbf;
+  font-size: 9px;
+  letter-spacing: .09em;
+}
+
+#mission-dashboard .rp-metrics strong {
+  color: #f8fbfe;
+  font-size: clamp(13px, 1.5vw, 17px);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+/* ANALYSIS SECTIONS */
+
+#mission-dashboard .rp-section {
+  margin-top: 20px;
+  padding: 17px;
+  border: 1px solid rgba(161, 194, 216, .13);
+  border-radius: 12px;
+  background: rgba(7, 15, 25, .46);
+}
+
+#mission-dashboard .rp-section h5 {
+  margin: 0 0 12px;
+  color: var(--mission-orange);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .15em;
+}
+
+#mission-dashboard .rp-section p,
+#mission-dashboard .rp-terrain {
+  color: #c4d0dc;
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+#mission-dashboard .rp-terrain {
+  display: grid;
+  gap: 9px;
+}
+
+#mission-dashboard .rp-terrain span {
+  padding-bottom: 7px;
+  border-bottom: 1px solid rgba(255, 255, 255, .06);
+}
+
+#mission-dashboard .rp-hazard-list {
+  padding-left: 18px;
+  color: #e7ccd0;
+}
+
+#mission-dashboard .rp-hazard-list li {
+  margin: 9px 0;
+  line-height: 1.7;
+}
+
+#mission-dashboard .rp-warning-list {
+  margin-top: 12px;
+  padding: 12px 12px 12px 30px;
+  border-left: 2px solid var(--mission-red);
+  background: rgba(255, 133, 127, .065);
+  color: #ffc0b7;
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+#mission-dashboard .rp-map-instruction {
+  border-left: 2px solid var(--mission-cyan);
+  background: rgba(135, 220, 240, .08);
+  color: #b1efff;
+  border-radius: 7px;
+}
+
+#mission-dashboard .rp-notice {
+  border-left: 2px solid var(--mission-green);
+  background: rgba(131, 223, 189, .08);
+  color: #c3ffe2;
+}
+
+#mission-dashboard .rp-error {
+  border-left: 2px solid var(--mission-red);
+  background: rgba(255, 133, 127, .09);
+  color: #ffc9c5;
+}
+
+#mission-dashboard .rp-load {
+  margin-top: 21px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(161, 194, 216, .15);
+}
+
+#mission-dashboard .rp-delete {
+  width: 100%;
+  margin-top: 20px;
+  padding: 12px;
+  border: 1px solid rgba(255, 133, 127, .35);
+  border-radius: 9px;
+  background: rgba(255, 133, 127, .10);
+  color: #ffb5ae;
+  cursor: pointer;
+}
+
+#mission-dashboard .rp-delete:hover:not(:disabled) {
+  background: rgba(255, 133, 127, .17);
+  border-color: rgba(255, 133, 127, .6);
+}
+
+#mission-dashboard .rp-disclaimer {
+  margin-top: 23px;
+  color: #92a6b8;
+  font-size: 10px;
+  line-height: 1.7;
+}
+
+/* MAP VISUAL REFINEMENTS */
+
+#mission-dashboard .map-wrapper {
+  position: relative;
+}
+
+#mission-dashboard .map-wrapper::before {
+  content: "";
+  position: absolute;
+  z-index: 605;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      180deg,
+      transparent 47%,
+      rgba(135, 220, 240, .07) 50%,
+      transparent 53%
+    );
+  background-size: 100% 240%;
+  opacity: .5;
+  animation: mc-map-scan 12s linear infinite;
+}
+
+#mission-dashboard .map-toolbar {
+  position: relative;
+}
+
+#mission-dashboard .map-toolbar::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 28%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--mission-orange),
+    transparent
+  );
+  box-shadow: 0 0 15px rgba(245, 154, 98, .35);
+}
+
+#mission-dashboard .map-legend {
+  box-shadow: 0 15px 35px rgba(0, 0, 0, .2);
+}
+
+#mission-dashboard .leaflet-overlay-pane
+path[stroke="#ffbd73"] {
+  animation: mc-route-flow 2s linear infinite;
+}
+
+/* MOTION */
+
+@keyframes mc-detail-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes mc-map-scan {
+  from {
+    background-position: 0 -240%;
+  }
+  to {
+    background-position: 0 240%;
+  }
+}
+
+@keyframes mc-route-flow {
+  from {
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke-dashoffset: -38;
+  }
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 600px) {
+  #mission-dashboard .rp-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  #mission-dashboard .rp-coordinate-group {
+    padding: 12px;
+  }
+
+  #mission-dashboard .rp-result-header {
+    flex-wrap: wrap;
+  }
+
+  #mission-dashboard .rp-actions {
+    margin-top: 8px;
+  }
+
+  #mission-dashboard .rp-section {
+    padding: 13px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #mission-dashboard .rp-results,
+  #mission-dashboard .map-wrapper::before,
+  #mission-dashboard .leaflet-overlay-pane
+  path[stroke="#ffbd73"] {
+    animation: none !important;
+  }
+}
+/* ORBIT & ORIGIN
+   Mission Control — Hazards, Science & Routes
+   Scoped to the dashboard, not the landing page.
+*/
+
+#mission-dashboard {
+  --mission-orange: #f59a62;
+  --mission-orange-soft: rgba(245, 154, 98, 0.13);
+  --mission-cyan: #87dcf0;
+  --mission-green: #83dfbd;
+  --mission-red: #ff857f;
+  --mission-border: rgba(161, 194, 216, 0.18);
+  --mission-panel: #101a28;
+}
+
+/* GENERAL INTERACTIVE PANELS */
+
+#mission-dashboard .sidebar {
+  scrollbar-width: thin;
+  scrollbar-color: #4a6375 transparent;
+}
+
+#mission-dashboard .sidebar button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+#mission-dashboard .sidebar button:focus-visible,
+#mission-dashboard .sidebar input:focus-visible,
+#mission-dashboard .sidebar select:focus-visible {
+  outline: 2px solid var(--mission-cyan);
+  outline-offset: 3px;
+}
+
+#mission-dashboard .sidebar button:not(:disabled) {
+  transition:
+    background-color .25s ease,
+    border-color .25s ease,
+    box-shadow .25s ease,
+    transform .25s ease,
+    filter .25s ease;
+}
+
+#mission-dashboard .sidebar input,
+#mission-dashboard .sidebar select {
+  min-width: 0;
+  background: rgba(5, 12, 21, .85);
+  color: #f0f7ff;
+  border: 1px solid rgba(151, 184, 207, .25);
+  border-radius: 9px;
+  transition:
+    border-color .25s ease,
+    box-shadow .25s ease;
+}
+
+#mission-dashboard .sidebar input:focus,
+#mission-dashboard .sidebar select:focus {
+  border-color: var(--mission-cyan);
+  box-shadow: 0 0 0 3px rgba(135, 220, 240, .09);
+}
+
+#mission-dashboard .sidebar input::placeholder {
+  color: #8999a8;
+}
+
+/* HAZARDS & SCIENCE */
+
+#mission-dashboard .sidebar > section:not(.rp-panel) {
+  position: relative;
+  margin-top: 24px;
+  padding: 22px 16px;
+  border: 1px solid var(--mission-border);
+  border-radius: 16px;
+  background:
+    radial-gradient(
+      circle at 100% 0%,
+      rgba(135, 220, 240, .075),
+      transparent 55%
+    ),
+    linear-gradient(
+      145deg,
+      rgba(25, 39, 57, .9),
+      rgba(11, 20, 32, .94)
+    );
+}
+
+#mission-dashboard .sidebar > section:not(.rp-panel)::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 24px;
+  width: 55px;
+  height: 2px;
+  background: var(--mission-cyan);
+  box-shadow: 0 0 18px rgba(135, 220, 240, .6);
+}
+
+#mission-dashboard .sidebar
+:is(
+  [class*="hazard-card"],
+  [class*="science-card"],
+  [class*="poi-card"],
+  [class*="location-item"]
+) {
+  position: relative;
+  border: 1px solid rgba(152, 185, 208, .16);
+  border-radius: 12px;
+  background: rgba(15, 27, 41, .85);
+  transition:
+    transform .25s ease,
+    border-color .25s ease,
+    box-shadow .25s ease;
+}
+
+#mission-dashboard .sidebar
+:is(
+  [class*="hazard-card"],
+  [class*="science-card"],
+  [class*="poi-card"],
+  [class*="location-item"]
+):hover {
+  transform: translateY(-3px);
+  border-color: rgba(135, 220, 240, .38);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, .18);
+}
+
+/* ROUTE PLANNING — MAIN PANEL */
+
+#mission-dashboard .rp-panel {
+  position: relative;
+  margin-top: 28px;
+  padding-top: 28px;
+  border-top: 1px solid rgba(245, 154, 98, .28);
+}
+
+#mission-dashboard .rp-heading {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+#mission-dashboard .rp-icon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 13px;
+  background: linear-gradient(
+    140deg,
+    rgba(245, 154, 98, .2),
+    rgba(245, 154, 98, .04)
+  );
+  border: 1px solid rgba(245, 154, 98, .32);
+  color: var(--mission-orange);
+  font-size: 24px;
+  box-shadow: 0 0 25px rgba(245, 154, 98, .09);
+}
+
+#mission-dashboard .rp-heading h3 {
+  margin: 0 0 5px;
+  color: #fff;
+  font-size: 18px;
+  letter-spacing: -.02em;
+}
+
+#mission-dashboard .rp-heading small {
+  color: #dbaa89;
+  font-size: 10px;
+  letter-spacing: .16em;
+}
+
+#mission-dashboard .rp-description {
+  margin: 15px 0 21px;
+  color: #a8b8c8;
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+/* COORDINATE INPUT PANELS */
+
+#mission-dashboard .rp-coordinate-group {
+  position: relative;
+  padding: 16px;
+  margin-bottom: 13px;
+  border: 1px solid var(--mission-border);
+  border-radius: 14px;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(27, 42, 60, .95),
+      rgba(11, 22, 36, .96)
+    );
+  overflow: hidden;
+}
+
+#mission-dashboard .rp-coordinate-group::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 45px;
+  height: 45px;
+  border-top: 1px solid rgba(245, 154, 98, .45);
+  border-right: 1px solid rgba(245, 154, 98, .45);
+  border-top-right-radius: 13px;
+  pointer-events: none;
+}
+
+#mission-dashboard .rp-coordinate-group strong {
+  color: #ffcbad;
+  font-size: 10px;
+  letter-spacing: .12em;
+}
+
+#mission-dashboard .rp-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+#mission-dashboard .rp-actions button {
+  padding: 6px 8px;
+  border: 1px solid rgba(135, 220, 240, .19);
+  border-radius: 6px;
+  background: rgba(135, 220, 240, .07);
+  color: #a9e4f1;
+  font-size: 10px;
+  cursor: pointer;
+}
+
+#mission-dashboard .rp-actions button:hover:not(:disabled) {
+  background: rgba(135, 220, 240, .15);
+}
+
+#mission-dashboard .rp-actions button.rp-picking {
+  background: rgba(131, 223, 189, .13);
+  border-color: rgba(131, 223, 189, .5);
+  color: #a4f6d7;
+}
+
+#mission-dashboard .rp-input-grid input {
+  width: 100%;
+  padding: 11px;
+  border-radius: 8px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* GENERATE BUTTON */
+
+#mission-dashboard .rp-primary {
+  position: relative;
+  width: 100%;
+  min-height: 48px;
+  border: 0;
+  border-radius: 10px;
+  background: linear-gradient(
+    110deg,
+    #f6b17a,
+    #ea8956
+  );
+  color: #1c110c;
+  font-weight: 850;
+  font-size: 12px;
+  letter-spacing: .035em;
+  cursor: pointer;
+  box-shadow: 0 10px 28px rgba(245, 154, 98, .16);
+}
+
+#mission-dashboard .rp-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 34px rgba(245, 154, 98, .27);
+}
+
+#mission-dashboard .rp-primary:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+#mission-dashboard .rp-primary:disabled {
+  cursor: wait;
+  opacity: .6;
+}
+
+/* ROUTE RESULTS */
+
+#mission-dashboard .rp-results {
+  position: relative;
+  margin-top: 24px;
+  padding-top: 22px;
+  border-top: 1px solid rgba(245, 154, 98, .25);
+  animation: mc-detail-reveal .55s ease both;
+}
+
+#mission-dashboard .rp-result-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+#mission-dashboard .rp-result-header h4 {
+  margin: 8px 0;
+  font-size: 17px;
+  line-height: 1.2;
+  color: #f7f5f2;
+}
+
+#mission-dashboard .rp-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 10px;
+  border: 1px solid rgba(131, 223, 189, .26);
+  border-radius: 30px;
+  background: rgba(131, 223, 189, .12);
+  color: #b4f3dc;
+  text-transform: capitalize;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+#mission-dashboard .rp-status-warning {
+  border-color: rgba(255, 133, 127, .35);
+  background: rgba(255, 133, 127, .12);
+  color: #ffc0b7;
+}
+
+/* SAFETY METRICS */
+
+#mission-dashboard .rp-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 18px;
+}
+
+#mission-dashboard .rp-metrics > div {
+  position: relative;
+  min-width: 0;
+  padding: 16px 12px;
+  border: 1px solid rgba(161, 194, 216, .18);
+  border-radius: 12px;
+  background: linear-gradient(
+    150deg,
+    #1d2e41,
+    #111d2c
+  );
+  overflow: hidden;
+  transition:
+    transform .25s ease,
+    border-color .25s ease;
+}
+
+#mission-dashboard .rp-metrics > div::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 14px;
+  width: 35px;
+  height: 2px;
+  background: var(--mission-cyan);
+  box-shadow: 0 0 12px rgba(135, 220, 240, .55);
+}
+
+#mission-dashboard .rp-metrics > div:nth-child(3)::before {
+  background: var(--mission-orange);
+  box-shadow: 0 0 12px rgba(245, 154, 98, .5);
+}
+
+#mission-dashboard .rp-metrics > div:hover {
+  transform: translateY(-3px);
+  border-color: rgba(135, 220, 240, .36);
+}
+
+#mission-dashboard .rp-metrics small {
+  display: block;
+  margin-bottom: 10px;
+  color: #9bafbf;
+  font-size: 9px;
+  letter-spacing: .09em;
+}
+
+#mission-dashboard .rp-metrics strong {
+  color: #f8fbfe;
+  font-size: clamp(13px, 1.5vw, 17px);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+/* ANALYSIS SECTIONS */
+
+#mission-dashboard .rp-section {
+  margin-top: 20px;
+  padding: 17px;
+  border: 1px solid rgba(161, 194, 216, .13);
+  border-radius: 12px;
+  background: rgba(7, 15, 25, .46);
+}
+
+#mission-dashboard .rp-section h5 {
+  margin: 0 0 12px;
+  color: var(--mission-orange);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .15em;
+}
+
+#mission-dashboard .rp-section p,
+#mission-dashboard .rp-terrain {
+  color: #c4d0dc;
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+#mission-dashboard .rp-terrain {
+  display: grid;
+  gap: 9px;
+}
+
+#mission-dashboard .rp-terrain span {
+  padding-bottom: 7px;
+  border-bottom: 1px solid rgba(255, 255, 255, .06);
+}
+
+#mission-dashboard .rp-hazard-list {
+  padding-left: 18px;
+  color: #e7ccd0;
+}
+
+#mission-dashboard .rp-hazard-list li {
+  margin: 9px 0;
+  line-height: 1.7;
+}
+
+#mission-dashboard .rp-warning-list {
+  margin-top: 12px;
+  padding: 12px 12px 12px 30px;
+  border-left: 2px solid var(--mission-red);
+  background: rgba(255, 133, 127, .065);
+  color: #ffc0b7;
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+#mission-dashboard .rp-map-instruction {
+  border-left: 2px solid var(--mission-cyan);
+  background: rgba(135, 220, 240, .08);
+  color: #b1efff;
+  border-radius: 7px;
+}
+
+#mission-dashboard .rp-notice {
+  border-left: 2px solid var(--mission-green);
+  background: rgba(131, 223, 189, .08);
+  color: #c3ffe2;
+}
+
+#mission-dashboard .rp-error {
+  border-left: 2px solid var(--mission-red);
+  background: rgba(255, 133, 127, .09);
+  color: #ffc9c5;
+}
+
+#mission-dashboard .rp-load {
+  margin-top: 21px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(161, 194, 216, .15);
+}
+
+#mission-dashboard .rp-delete {
+  width: 100%;
+  margin-top: 20px;
+  padding: 12px;
+  border: 1px solid rgba(255, 133, 127, .35);
+  border-radius: 9px;
+  background: rgba(255, 133, 127, .10);
+  color: #ffb5ae;
+  cursor: pointer;
+}
+
+#mission-dashboard .rp-delete:hover:not(:disabled) {
+  background: rgba(255, 133, 127, .17);
+  border-color: rgba(255, 133, 127, .6);
+}
+
+#mission-dashboard .rp-disclaimer {
+  margin-top: 23px;
+  color: #92a6b8;
+  font-size: 10px;
+  line-height: 1.7;
+}
+
+/* MAP VISUAL REFINEMENTS */
+
+#mission-dashboard .map-wrapper {
+  position: relative;
+}
+
+#mission-dashboard .map-wrapper::before {
+  content: "";
+  position: absolute;
+  z-index: 605;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      180deg,
+      transparent 47%,
+      rgba(135, 220, 240, .07) 50%,
+      transparent 53%
+    );
+  background-size: 100% 240%;
+  opacity: .5;
+  animation: mc-map-scan 12s linear infinite;
+}
+
+#mission-dashboard .map-toolbar {
+  position: relative;
+}
+
+#mission-dashboard .map-toolbar::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 28%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--mission-orange),
+    transparent
+  );
+  box-shadow: 0 0 15px rgba(245, 154, 98, .35);
+}
+
+#mission-dashboard .map-legend {
+  box-shadow: 0 15px 35px rgba(0, 0, 0, .2);
+}
+
+#mission-dashboard .leaflet-overlay-pane
+path[stroke="#ffbd73"] {
+  animation: mc-route-flow 2s linear infinite;
+}
+
+/* MOTION */
+
+@keyframes mc-detail-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes mc-map-scan {
+  from {
+    background-position: 0 -240%;
+  }
+  to {
+    background-position: 0 240%;
+  }
+}
+
+@keyframes mc-route-flow {
+  from {
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke-dashoffset: -38;
+  }
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 600px) {
+  #mission-dashboard .rp-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  #mission-dashboard .rp-coordinate-group {
+    padding: 12px;
+  }
+
+  #mission-dashboard .rp-result-header {
+    flex-wrap: wrap;
+  }
+
+  #mission-dashboard .rp-actions {
+    margin-top: 8px;
+  }
+
+  #mission-dashboard .rp-section {
+    padding: 13px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #mission-dashboard .rp-results,
+  #mission-dashboard .map-wrapper::before,
+  #mission-dashboard .leaflet-overlay-pane
+  path[stroke="#ffbd73"] {
+    animation: none !important;
+  }
+}
