@@ -121,13 +121,13 @@ function App() {
   const [activeLayer, setActiveLayer] = useState("Satellite");
 
   const [selectedLocation, setSelectedLocation] = useState({
-    lat: 18.1359,
-    lon: 77.2614,
+    lat: 18.4,
+    lon: 77.4,
   });
 
   const [markerPosition, setMarkerPosition] = useState([
-    18.1359,
-    77.2614,
+    18.4,
+    77.4,
   ]);
 
   const [marsMap, setMarsMap] = useState(null);
@@ -345,37 +345,32 @@ function App() {
             </div>
 
             {terrain && (
-              <div className="location-card terrain-card">
-                <span className="location-name">
-                  Terrain Information
-                </span>
+  <div className="location-card terrain-card">
+    <span className="location-name">
+      Terrain Information
+    </span>
 
-                <div className="coordinate-row">
-                  <span>Average Elevation</span>
-                  <strong>{terrain.average_elevation} m</strong>
-                </div>
+    <div className="coordinate-row">
+      <span>MOLA Elevation</span>
+      <strong>{terrain.elevation.mola} m</strong>
+    </div>
 
-                <div className="coordinate-row">
-                  <span>Minimum Elevation</span>
-                  <strong>{terrain.min_elevation} m</strong>
-                </div>
+    <div className="coordinate-row">
+      <span>HiRISE Elevation</span>
+      <strong>{terrain.elevation.hirise} m</strong>
+    </div>
 
-                <div className="coordinate-row">
-                  <span>Maximum Elevation</span>
-                  <strong>{terrain.max_elevation} m</strong>
-                </div>
+    <div className="coordinate-row">
+      <span>MOLA Slope</span>
+      <strong>{terrain.slope.mola}°</strong>
+    </div>
 
-                <div className="coordinate-row">
-                  <span>Average Slope</span>
-                  <strong>{terrain.average_slope}°</strong>
-                </div>
-
-                <div className="coordinate-row">
-                  <span>Surface Type</span>
-                  <strong>{terrain.surface_type}</strong>
-                </div>
-              </div>
-            )}
+    <div className="coordinate-row">
+      <span>HiRISE Slope</span>
+      <strong>{terrain.slope.hirise}°</strong>
+    </div>
+  </div>
+)}
 
             <p className="map-hint">
               Click anywhere on the map to inspect a location.
@@ -411,7 +406,7 @@ function App() {
             >
               <MapContainer
                 crs={L.CRS.EPSG4326}
-                center={[18.1359, 77.2614]}
+                center={[18.4, 77.4]}
                 zoom={10}
                 minZoom={3}
                 maxZoom={17}
