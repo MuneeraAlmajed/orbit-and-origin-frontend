@@ -4,6 +4,12 @@
 
 Orbit and Origin is an interactive Mars exploration platform designed to help users explore Martain terrain, understand environmental conditions, identify potential hazards, and plan safer routes using integrated data from NASA missions.
 
+## Backend Repository
+Here is the link to our backend repository:
+
+[Orbit & Origin Backend – GitHub](https://github.com/MuneeraAlmajed/orbit-and-origin-backend)
+
+
 
 ## Target Users
 
