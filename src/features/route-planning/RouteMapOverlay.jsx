@@ -1,3 +1,4 @@
+
 import { useEffect, useMemo } from "react";
 import { CircleMarker, Polyline, Tooltip, useMap } from "react-leaflet";
 
@@ -39,6 +40,17 @@ export default function RouteMapOverlay({ route }) {
     return route.waypoints.filter(isValidPoint).map(toLeafletPoint);
   }, [route]);
 
+  const exploredCells = useMemo(() => {
+    if (!Array.isArray(route?.explored_cells)) {
+      return [];
+    }
+
+    return route.explored_cells
+      .filter(isValidPoint)
+      .filter((_, index) => index % 10 === 0)
+      .map(toLeafletPoint);
+  }, [route]);
+
   if (!route) return null;
 
   const start = isValidPoint(route.start)
@@ -52,6 +64,21 @@ export default function RouteMapOverlay({ route }) {
   return (
     <>
       <FitRouteToMap waypoints={waypoints} routeId={route.id} />
+
+      {exploredCells.map((cell, index) => (
+        <CircleMarker
+          key={`explored-${index}`}
+          center={cell}
+          radius={2}
+          pathOptions={{
+            color: "#168bff",
+            weight: 0,
+            fillColor: "#168bff",
+            fillOpacity: 0.65,
+            bubblingMouseEvents: false,
+          }}
+        />
+      ))}
 
       {waypoints.length >= 2 && (
         <Polyline
