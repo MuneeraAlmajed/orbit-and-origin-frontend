@@ -1,14 +1,28 @@
 
-const API_URL = 'https://orbit-and-origin-backend.onrender.com/api/v1/mars'
+const API_URL = 'http://127.0.0.1:8001/api/v1/mars'
+
 async function fetchData(endpoint) {
-  const response = await fetch(`${API_URL}${endpoint}`)
+  const controller = new AbortController()
+  const timeout = setTimeout(() => controller.abort(), 15000)
 
-  if (!response.ok) {
-    const message = await response.text()
-    throw new Error(`API Error ${response.status}: ${message}`)
+  try {
+    const response = await fetch(`${API_URL}${endpoint}`, {
+      signal: controller.signal,
+    })
+
+    if (!response.ok) {
+      throw new Error(`API Error ${response.status}`)
+    }
+
+    return await response.json()
+  } catch (error) {
+    if (error.name === 'AbortError') {
+      throw new Error(`Loading ${endpoint} timed out`)
+    }
+    throw error
+  } finally {
+    clearTimeout(timeout)
   }
-
-  return response.json()
 }
 
 export function getMarsMap() {
@@ -34,7 +48,6 @@ export function getMarsImagery(lat, lon) {
 export function getTerrainGrid() {
   return fetchData('/terrain/grid')
 }
-
 
 export function get3DTerrain() {
   return fetchData('/terrain/3d')
