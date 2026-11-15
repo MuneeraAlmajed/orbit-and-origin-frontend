@@ -1,11 +1,5 @@
-
-import { useEffect, useMemo } from 'react'
-import {
-  CircleMarker,
-  Polyline,
-  Tooltip,
-  useMap,
-} from 'react-leaflet'
+import { useEffect, useMemo } from "react";
+import { CircleMarker, Polyline, Tooltip, useMap } from "react-leaflet";
 
 function isValidPoint(point) {
   return (
@@ -14,73 +8,63 @@ function isValidPoint(point) {
     point.lon != null &&
     Number.isFinite(Number(point.lat)) &&
     Number.isFinite(Number(point.lon))
-  )
+  );
 }
 
 function toLeafletPoint(point) {
-  return [
-    Number(point.lat),
-    Number(point.lon),
-  ]
+  return [Number(point.lat), Number(point.lon)];
 }
 
 function FitRouteToMap({ waypoints, routeId }) {
-  const map = useMap()
+  const map = useMap();
 
   useEffect(() => {
-    if (waypoints.length < 2) return
+    if (waypoints.length < 2) return;
 
     map.fitBounds(waypoints, {
       padding: [40, 40],
       maxZoom: 12,
-    })
-  }, [map, waypoints, routeId])
+    });
+  }, [map, waypoints, routeId]);
 
-  return null
+  return null;
 }
 
 export default function RouteMapOverlay({ route }) {
   const waypoints = useMemo(() => {
     if (!Array.isArray(route?.waypoints)) {
-      return []
+      return [];
     }
 
-    return route.waypoints
-      .filter(isValidPoint)
-      .map(toLeafletPoint)
-  }, [route])
+    return route.waypoints.filter(isValidPoint).map(toLeafletPoint);
+  }, [route]);
 
-  if (!route) return null
+  if (!route) return null;
 
   const start = isValidPoint(route.start)
     ? toLeafletPoint(route.start)
-    : waypoints[0]
+    : waypoints[0];
 
   const destination = isValidPoint(route.destination)
     ? toLeafletPoint(route.destination)
-    : waypoints[waypoints.length - 1]
+    : waypoints[waypoints.length - 1];
 
   return (
     <>
-      <FitRouteToMap
-        waypoints={waypoints}
-        routeId={route.id}
-      />
+      <FitRouteToMap waypoints={waypoints} routeId={route.id} />
 
       {waypoints.length >= 2 && (
         <Polyline
           positions={waypoints}
           pathOptions={{
-            color: '#ffbd73',
+            color: "#00e5ff",
             weight: 5,
-            opacity: 0.95,
-            dashArray: '12 7',
+            opacity: 1,
+            dashArray: "12 7",
             bubblingMouseEvents: false,
           }}
         >
-          <Tooltip>
-            Simulated route #{route.id}
-          </Tooltip>
+          <Tooltip>A* Pathfinding Route #{route.id}</Tooltip>
         </Polyline>
       )}
 
@@ -89,16 +73,14 @@ export default function RouteMapOverlay({ route }) {
           center={start}
           radius={10}
           pathOptions={{
-            color: '#ffffff',
+            color: "#ffffff",
             weight: 2,
-            fillColor: '#37c9a9',
+            fillColor: "#37c9a9",
             fillOpacity: 1,
             bubblingMouseEvents: false,
           }}
         >
-          <Tooltip direction="top">
-            Route start
-          </Tooltip>
+          <Tooltip direction="top">Route start</Tooltip>
         </CircleMarker>
       )}
 
@@ -107,18 +89,16 @@ export default function RouteMapOverlay({ route }) {
           center={destination}
           radius={10}
           pathOptions={{
-            color: '#ffffff',
+            color: "#ffffff",
             weight: 2,
-            fillColor: '#ef9869',
+            fillColor: "#ef9869",
             fillOpacity: 1,
             bubblingMouseEvents: false,
           }}
         >
-          <Tooltip direction="top">
-            Route destination
-          </Tooltip>
+          <Tooltip direction="top">Route destination</Tooltip>
         </CircleMarker>
       )}
     </>
-  )
+  );
 }

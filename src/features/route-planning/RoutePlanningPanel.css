@@ -9,6 +9,23 @@
     text-align: left;
   }
 
+  .rp-algorithm {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.rp-algorithm strong {
+  color: #37c9a9;
+  font-size: 13px;
+}
+
+.rp-algorithm span {
+  color: #8b9ba8;
+  font-size: 11px;
+}
+
   .rp-panel * {
     box-sizing: border-box;
   }

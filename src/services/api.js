@@ -5,7 +5,8 @@ async function fetchData(endpoint) {
   const response = await fetch(`${API_URL}${endpoint}`)
 
   if (!response.ok) {
-    throw new Error('Failed to fetch data')
+    const message = await response.text()
+    throw new Error(`API Error ${response.status}: ${message}`)
   }
 
   return response.json()

@@ -166,6 +166,11 @@ export default function RoutePlanningPanel({ planner, selectedLocation }) {
           <div className="rp-result-header">
             <div>
               <small>ACTIVE ROUTE #{route.id}</small>
+
+              <div className="rp-algorithm">
+                <strong>{route.algorithm ?? "A* Pathfinding"}</strong>
+                <span>{route.data_source ?? "USGS/NASA HiRISE DTM"}</span>
+              </div>
               <h4>{route.name ?? "Exploration Route"}</h4>
             </div>
 
