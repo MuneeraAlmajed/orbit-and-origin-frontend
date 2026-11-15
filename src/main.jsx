@@ -1,4 +1,3 @@
-import MissionCursor from "./components/MissionCursor.jsx";
 import CinematicLanding from "./components/CinematicLanding.jsx";
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
@@ -9,7 +8,6 @@ import "./styles/map-native-cursor.css";
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <MissionCursor />
       <CinematicLanding />
       <div id="mission-dashboard">
         <App />

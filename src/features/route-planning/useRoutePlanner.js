@@ -33,14 +33,15 @@ function validPoint(point) {
 }
 
 export function useRoutePlanner() {
-  const [start, setStart] = useState({
-    lat: '18.35',
-    lon: '77.60',
-  })
-  const [destination, setDestination] = useState({
-    lat: '18.50',
-    lon: '77.85',
-  })
+const [start, setStart] = useState({
+  lat: '18.38',
+  lon: '77.30',
+})
+
+const [destination, setDestination] = useState({
+  lat: '18.48',
+  lon: '77.50',
+})
 
   const [pickMode, setPickMode] = useState(null)
   const [route, setRoute] = useState(null)

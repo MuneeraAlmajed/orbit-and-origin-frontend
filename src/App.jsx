@@ -7,6 +7,7 @@ import {
   Rectangle,
 } from "react-leaflet";
 import L from "leaflet";
+import Terrain3D from "./features/terrain-3d/Terrain3D";
 
 import {
   getMarsMap,
@@ -168,22 +169,20 @@ function App() {
     ...layers,
   ];
 
-const terrainLegend = {
-  Elevation: [
-    { color: "#2c7bb6", label: "Below -2400 m" },
-    { color: "#abd9e9", label: "-2400 to -2200 m" },
-    { color: "#ffffbf", label: "-2200 to -2000 m" },
-    { color: "#fdae61", label: "Above -2000 m" },
-  ],
-  Slope: [
-    { color: "#2ecc71", label: "Gentle: below 5°" },
-    { color: "#f1c40f", label: "Moderate: 5°–15°" },
-    { color: "#e74c3c", label: "Steep: above 15°" },
-  ],
-  "Rock Density": [
-    { color: "#d6b58c", label: "Not yet available" },
-  ],
-};
+  const terrainLegend = {
+    Elevation: [
+      { color: "#2c7bb6", label: "Below -2400 m" },
+      { color: "#abd9e9", label: "-2400 to -2200 m" },
+      { color: "#ffffbf", label: "-2200 to -2000 m" },
+      { color: "#fdae61", label: "Above -2000 m" },
+    ],
+    Slope: [
+      { color: "#2ecc71", label: "Gentle: below 5°" },
+      { color: "#f1c40f", label: "Moderate: 5°–15°" },
+      { color: "#e74c3c", label: "Steep: above 15°" },
+    ],
+    "Rock Density": [{ color: "#d6b58c", label: "Not yet available" }],
+  };
 
   return (
     <div className="dashboard">
@@ -336,19 +335,24 @@ const terrainLegend = {
               Click anywhere on the map to inspect a location.
             </p>
 
-            <section className="oo-hazards-shell" aria-label="Hazards and science">
+            <section
+              className="oo-hazards-shell"
+              aria-label="Hazards and science"
+            >
               <div className="oo-hazards-head">
                 <div className="oo-hazards-heading">
-                  <span className="oo-hazards-kicker">02 / MISSION INTELLIGENCE</span>
+                  <span className="oo-hazards-kicker">
+                    02 / MISSION INTELLIGENCE
+                  </span>
                   <h3>Hazard & Science Analysis</h3>
                   <p>Explore surface risks and scientific destinations.</p>
                 </div>
                 <span className="oo-hazards-badge">PROTOTYPE DATA</span>
               </div>
               <HazardsSciencePanel
-              data={hazardsScience}
-              selectedLocation={selectedLocation}
-            />
+                data={hazardsScience}
+                selectedLocation={selectedLocation}
+              />
             </section>
 
             <RoutePlanningPanel
@@ -397,7 +401,10 @@ const terrainLegend = {
                   attribution="NASA Mars Trek / HiRISE"
                 />
 
-                <TerrainOverlay activeLayer={activeLayer} terrainGrid={terrainGrid} />
+                <TerrainOverlay
+                  activeLayer={activeLayer}
+                  terrainGrid={terrainGrid}
+                />
 
                 {activeLayer !== "Satellite" && (
                   <div className="terrain-legend">
@@ -484,6 +491,12 @@ const terrainLegend = {
             </div>
           </section>
         </section>
+        <Terrain3D
+          route={routePlanner.route}
+          terrainReport={routePlanner.terrainReport}
+          hazardReport={routePlanner.hazardReport}
+          analysis={routePlanner.analysis}
+        />
       </main>
     </div>
   );
