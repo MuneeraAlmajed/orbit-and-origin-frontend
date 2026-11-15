@@ -1,6 +1,5 @@
 
-const API_URL = 'http://127.0.0.1:8001/api/v1/mars'
-
+const API_URL = 'https://orbit-and-origin-backend.onrender.com/api/v1/mars'
 async function fetchData(endpoint) {
   const response = await fetch(`${API_URL}${endpoint}`)
 
